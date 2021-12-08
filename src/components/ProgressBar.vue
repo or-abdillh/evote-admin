@@ -18,9 +18,9 @@
             <progress
                max="100"
                :value="props.value"
-               class="w-full bg-green-300"
+               class="w-full"
             ></progress>
-            <small>{{ props.value }}%</small>
+            <p>{{ props.value }}%</p>
          </div>
    </div>
 </template>

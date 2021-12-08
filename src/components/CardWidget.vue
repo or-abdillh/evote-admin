@@ -14,6 +14,10 @@ defineProps({
     type: Number,
     default: 0
   },
+  text: {
+     type: String,
+     default: ''
+  },
   icon: {
     type: String,
     default: null
@@ -69,10 +73,12 @@ const darkMode = computed(() => store.state.darkMode)
         </h3>
         <h1 class="text-3xl leading-tight font-semibold">
           <growing-number
+            v-if="text === ''"
             :value="number"
             :prefix="prefix"
             :suffix="suffix"
           />
+          {{ text }}
         </h1>
       </div>
       <icon

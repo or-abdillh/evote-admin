@@ -12,7 +12,8 @@ import {
   mdiReload,
   mdiGithub,
   mdiChartPie,
-  mdiVote
+  mdiVote,
+  mdiClock
 } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -31,10 +32,6 @@ const titleStack = ref(['Admin', 'Dashboard'])
 
 const store = useStore()
 
-const clientBarItems = computed(() => store.state.clients.slice(0, 3))
-
-const transactionBarItems = computed(() => store.state.history.slice(0, 3))
-
 const darkMode = computed(() => store.state.darkMode)
 </script>
 
@@ -43,13 +40,17 @@ const darkMode = computed(() => store.state.darkMode)
   <hero-bar>Dashboard</hero-bar>
   <main-section>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
+      
+      <!-- Kandidat Paslon -->
       <card-widget
         color="text-green-500"
         :icon="mdiAccountMultiple"
         number="4"
-        label="Jumlah Kandidat Calon"
+        label="Kandidat Paslon"
         suffix=" paslon"
       />
+      
+      <!-- DPT -->
       <card-widget
         trend-type="up"
         color="text-green-500"
@@ -58,6 +59,8 @@ const darkMode = computed(() => store.state.darkMode)
         label="DPT"
         suffix=" orang"
       />
+      
+      <!-- Suara masuk -->
       <card-widget
         trend="12%"
         trend-type="up"
@@ -67,6 +70,8 @@ const darkMode = computed(() => store.state.darkMode)
         suffix=" suara"
         label="Suara Masuk"
       />
+      
+      <!-- Belum memilih -->
       <card-widget
         trend="5%"
         trend-type="down"
@@ -76,8 +81,29 @@ const darkMode = computed(() => store.state.darkMode)
         suffix=" orang"
         label="Belum memilih"
       />
+      
+      <!-- Partisipasi Pemilih -->
+      <card-widget
+        trend="2%"
+        trend-type="up"
+        color="text-blue-500"
+        :icon="mdiChartTimelineVariant"
+        number="84.14"
+        suffix="%"
+        label="Partisipasi pemilih"
+      />
+      
+      <!-- Countdown -->
+      <card-widget
+        color="text-green-500"
+        :icon="mdiClock"
+        text="3j 45m 22s"
+        label="Countdown"
+      />
+      
     </div>
-
+   
+   <!-- Quick Count -->
     <title-sub-bar
       :icon="mdiChartPie"
       title="Perhitungan Suara"
@@ -90,6 +116,18 @@ const darkMode = computed(() => store.state.darkMode)
       class="mb-6"
     >
        <ul class="list-style-none">
+         <li>
+            <ProgressBar 
+               value="55"
+               title="Sandhika dan Galih"
+            />
+         </li>
+         <li>
+            <ProgressBar 
+               value="55"
+               title="Sandhika dan Galih"
+            />
+         </li>
          <li>
             <ProgressBar 
                value="55"
