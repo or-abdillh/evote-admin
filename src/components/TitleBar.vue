@@ -24,13 +24,6 @@ defineProps({
           {{ title }}
         </li>
       </ul>
-      <jb-button
-        href="https://github.com/justboil/admin-one-vue-tailwind"
-        color="info"
-        label="Star on GitHub"
-        target="_blank"
-        :icon="mdiGithub"
-      />
     </level>
   </section>
 </template>

@@ -2,6 +2,8 @@
 import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import {
+  mdiAccountGroup,
+  mdiAccountAlert,
   mdiAccountMultiple,
   mdiCartOutline,
   mdiChartTimelineVariant,
@@ -9,10 +11,9 @@ import {
   mdiMonitorCellphone,
   mdiReload,
   mdiGithub,
-  mdiChartPie
+  mdiChartPie,
+  mdiVote
 } from '@mdi/js'
-import * as chartConfig from '@/components/Charts/chart.config.js'
-import LineChart from '@/components/Charts/LineChart.vue'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
@@ -24,18 +25,9 @@ import JbButton from '@/components/JbButton.vue'
 import CardTransactionBar from '@/components/CardTransactionBar.vue'
 import CardClientBar from '@/components/CardClientBar.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
+import ProgressBar from '@/components/ProgressBar.vue'
 
 const titleStack = ref(['Admin', 'Dashboard'])
-
-const chartData = ref(null)
-
-const fillChartData = () => {
-  chartData.value = chartConfig.sampleChartData()
-}
-
-onMounted(() => {
-  fillChartData()
-})
 
 const store = useStore()
 
@@ -61,7 +53,7 @@ const darkMode = computed(() => store.state.darkMode)
       <card-widget
         trend-type="up"
         color="text-green-500"
-        :icon="mdiAccountMultiple"
+        :icon="mdiAccountGroup"
         number="88"
         label="DPT"
         suffix=" orang"
@@ -70,7 +62,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend="12%"
         trend-type="up"
         color="text-blue-500"
-        :icon="mdiCartOutline"
+        :icon="mdiVote"
         :number="56"
         suffix=" suara"
         label="Suara Masuk"
@@ -79,56 +71,32 @@ const darkMode = computed(() => store.state.darkMode)
         trend="5%"
         trend-type="down"
         color="text-red-500"
-        :icon="mdiChartTimelineVariant"
+        :icon="mdiAccountAlert"
         :number="32"
         suffix=" orang"
         label="Belum memilih"
       />
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-      <div class="flex flex-col justify-between">
-        <card-transaction-bar
-          v-for="(transaction,index) in transactionBarItems"
-          :key="index"
-          :amount="transaction.amount"
-          :date="transaction.date"
-          :business="transaction.business"
-          :type="transaction.type"
-          :name="transaction.name"
-          :account="transaction.account"
-        />
-      </div>
-      <div class="flex flex-col justify-between">
-        <card-client-bar
-          v-for="client in clientBarItems"
-          :key="client.id"
-          :name="client.name"
-          :login="client.login"
-          :date="client.created"
-          :progress="client.progress"
-        />
-      </div>
-    </div>
-
     <title-sub-bar
       :icon="mdiChartPie"
-      title="Trends overview"
+      title="Perhitungan Suara"
     />
 
     <card-component
-      title="Performance"
+      title="Upadate terakhir pada 12:00 12-12-2021"
       :icon="mdiFinance"
       :header-icon="mdiReload"
       class="mb-6"
-      @header-icon-click="fillChartData"
     >
-      <div v-if="chartData">
-        <line-chart
-          :data="chartData"
-          class="h-96"
-        />
-      </div>
+       <ul class="list-style-none">
+         <li>
+            <ProgressBar 
+               value="55"
+               title="Sandhika dan Galih"
+            />
+         </li>
+       </ul>
     </card-component>
   </main-section>
 </template>
