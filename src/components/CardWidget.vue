@@ -61,14 +61,6 @@ const darkMode = computed(() => store.state.darkMode)
         :trend-type="trendType"
         small
       />
-      <jb-button
-        :icon="mdiCog"
-        icon-w="w-4"
-        icon-h="h-4"
-        :color="darkMode ? 'white' : 'light'"
-        :outline="darkMode"
-        small
-      />
     </level>
     <level mobile>
       <div>

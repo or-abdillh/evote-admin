@@ -50,53 +50,39 @@ const darkMode = computed(() => store.state.darkMode)
   <title-bar :title-stack="titleStack" />
   <hero-bar>Dashboard</hero-bar>
   <main-section>
-    <notification
-      color="info"
-      :icon="mdiGithub"
-    >
-      Please star this project on
-      <a
-        href="https://github.com/justboil/admin-one-vue-tailwind"
-        class="underline"
-        target="_blank"
-      >GitHub</a>
-      <template #right>
-        <jb-button
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          :icon="mdiGithub"
-          :outline="darkMode"
-          label="GitHub"
-          target="_blank"
-          small
-        />
-      </template>
-    </notification>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
       <card-widget
-        trend="12%"
+        color="text-green-500"
+        :icon="mdiAccountMultiple"
+        number="4"
+        label="Jumlah Kandidat Calon"
+        suffix=" paslon"
+      />
+      <card-widget
         trend-type="up"
         color="text-green-500"
         :icon="mdiAccountMultiple"
-        :number="512"
-        label="Clients"
+        number="88"
+        label="DPT"
+        suffix=" orang"
       />
       <card-widget
         trend="12%"
-        trend-type="down"
+        trend-type="up"
         color="text-blue-500"
         :icon="mdiCartOutline"
-        :number="7770"
-        prefix="$"
-        label="Sales"
+        :number="56"
+        suffix=" suara"
+        label="Suara Masuk"
       />
       <card-widget
-        trend="Overflow"
-        trend-type="alert"
+        trend="5%"
+        trend-type="down"
         color="text-red-500"
         :icon="mdiChartTimelineVariant"
-        :number="256"
-        suffix="%"
-        label="Performance"
+        :number="32"
+        suffix=" orang"
+        label="Belum memilih"
       />
     </div>
 
@@ -143,26 +129,6 @@ const darkMode = computed(() => store.state.darkMode)
           class="h-96"
         />
       </div>
-    </card-component>
-
-    <title-sub-bar
-      :icon="mdiAccountMultiple"
-      title="Clients"
-    />
-
-    <notification
-      color="info"
-      :icon="mdiMonitorCellphone"
-    >
-      <b>Responsive table.</b> Collapses on mobile
-    </notification>
-
-    <card-component
-      :icon="mdiMonitorCellphone"
-      title="Responsive table"
-      has-table
-    >
-      <clients-table />
     </card-component>
   </main-section>
 </template>
