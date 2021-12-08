@@ -118,20 +118,23 @@ const darkMode = computed(() => store.state.darkMode)
        <ul class="list-style-none">
          <li>
             <ProgressBar 
-               value="55"
+               value="35"
                title="Sandhika dan Galih"
+               bgColor="bg-green-400"
             />
          </li>
          <li>
             <ProgressBar 
                value="55"
                title="Sandhika dan Galih"
+               bgColor="bg-blue-400"
             />
          </li>
          <li>
             <ProgressBar 
                value="55"
                title="Sandhika dan Galih"
+               bgColor="bg-yellow-400"
             />
          </li>
        </ul>

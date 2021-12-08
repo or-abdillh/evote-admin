@@ -7,6 +7,10 @@
       value: {
          type: Number,
          default: 45
+      },
+      bgColor: {
+      	type: String,
+      	default: 'bg-green-400'
       }
    })
 </script>
@@ -14,13 +18,15 @@
 <template>
    <div class="mb-3">
       <p class="mb-2">{{ props.title }}</p>
-         <div data-label="Progress" class="flex items-center gap-3">
-            <progress
-               max="100"
-               :value="props.value"
-               class="w-full"
-            ></progress>
-            <p>{{ props.value }}%</p>
+         <div>
+             <div class="h-8 w-full bg-gray-100 mt-2 rounded-full overflow-hidden">
+               <div 
+               :class="bgColor"
+               class="h-full grid place-items-center text-xs leading-none py-1 text-center text-white" 
+               :style="{ width: value + '%' }">
+                  {{ value }}%
+               </div>
+            </div>
          </div>
    </div>
 </template>
