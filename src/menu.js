@@ -1,5 +1,7 @@
 import {
   mdiAccountCircle,
+  mdiAccountGroup,
+  mdiPlus,
   mdiDesktopMac,
   mdiGithub,
   mdiLock,
@@ -13,12 +15,46 @@ import {
 } from '@mdi/js'
 
 export default [
-  'General',
+  'Admin',
   [
     {
       to: '/',
       icon: mdiDesktopMac,
       label: 'Dashboard'
+    }
+  ],
+  'Pemilih',
+  [
+	{
+      to: '/',
+      icon: mdiAccountGroup,
+      label: 'DPT'
+    },
+  	{
+      to: '/',
+      icon: mdiPlus,
+      label: 'Tambah Pemilih'
+    }
+  ],
+  'Kandidat',
+  [
+  	{
+      to: '/',
+      icon: mdiAccountGroup,
+      label: 'Pasangan Calon'
+    },
+    {
+      to: '/',
+      icon: mdiPlus,
+      label: 'Tambah Paslon'
+    }
+  ],
+  'Acara',
+  [
+  	{
+      to: '/',
+      icon: mdiPlus,
+      label: 'Kelola Acara'
     }
   ],
   'Examples',
@@ -71,21 +107,6 @@ export default [
           label: 'Sub-item Two'
         }
       ]
-    }
-  ],
-  'About',
-  [
-    {
-      href: 'https://justboil.me/tailwind-admin-templates/vue-dashboard/',
-      label: 'Premium version',
-      icon: mdiMonitorShimmer,
-      target: '_blank'
-    },
-    {
-      href: 'https://github.com/justboil/admin-one-vue-tailwind',
-      label: 'GitHub',
-      icon: mdiGithub,
-      target: '_blank'
     }
   ]
 ]
