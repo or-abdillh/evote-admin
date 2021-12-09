@@ -52,6 +52,8 @@ const menuNavBarToggle = () => {
 const menuOpenLg = () => {
   store.dispatch('asideLgToggle', true)
 }
+
+const logout = () => console.log('logout')
 </script>
 
 <template>
@@ -101,67 +103,20 @@ const menuOpenLg = () => {
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
         <nav-bar-menu has-divider>
-          <nav-bar-item-label
-            :icon="mdiMenu"
-            label="Sample menu"
-          />
-
-          <template #dropdown>
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiClockOutline"
-                label="Item One"
-              />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiCloud"
-                label="Item Two"
-              />
-            </nav-bar-item>
-            <nav-bar-menu-divider />
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiCrop"
-                label="Item Last"
-              />
-            </nav-bar-item>
-          </template>
-        </nav-bar-menu>
-        <nav-bar-menu has-divider>
           <user-avatar class="w-6 h-6 mr-3 inline-flex" />
           <div>
             <span>{{ userName }}</span>
           </div>
-
-          <template #dropdown>
-            <nav-bar-item to="/profile">
-              <nav-bar-item-label
-                :icon="mdiAccount"
-                label="My Profile"
-              />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiCogOutline"
-                label="Settings"
-              />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiEmail"
-                label="Messages"
-              />
-            </nav-bar-item>
-            <nav-bar-menu-divider />
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiLogout"
-                label="Log Out"
-              />
-            </nav-bar-item>
-          </template>
         </nav-bar-menu>
+
+		<nav-bar-menu-divider />
+         <nav-bar-item @click="logout()">
+           <nav-bar-item-label
+             :icon="mdiLogout"
+             label="Log Out"
+           />
+         </nav-bar-item>
+        
         <nav-bar-item
           has-divider
           is-desktop-icon-only
@@ -170,24 +125,6 @@ const menuOpenLg = () => {
           <nav-bar-item-label
             :icon="mdiThemeLightDark"
             label="Light/Dark"
-            is-desktop-icon-only
-          />
-        </nav-bar-item>
-        <nav-bar-item
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          has-divider
-          is-desktop-icon-only
-        >
-          <nav-bar-item-label
-            :icon="mdiGithub"
-            label="GitHub"
-            is-desktop-icon-only
-          />
-        </nav-bar-item>
-        <nav-bar-item is-desktop-icon-only>
-          <nav-bar-item-label
-            :icon="mdiLogout"
-            label="Log out"
             is-desktop-icon-only
           />
         </nav-bar-item>
