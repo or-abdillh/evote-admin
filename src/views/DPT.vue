@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { mdiAccountGroup, mdiReload } from '@mdi/js'
+import DataTables from '@/components/DataTables.vue'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import ClientsTable from '@/components/ClientsTable.vue'
@@ -26,5 +27,6 @@ const titleStack = ref(['Admin', 'DPT'])
 		 >
 		 </card-component>
   	</div>
+	<data-tables />
   </main-section>
 </template>
