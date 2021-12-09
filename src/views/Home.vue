@@ -45,7 +45,7 @@ const darkMode = computed(() => store.state.darkMode)
       <card-widget
         color="text-green-500"
         :icon="mdiAccountMultiple"
-        number="4"
+        :number="4"
         label="Kandidat Paslon"
         suffix=" paslon"
       />
@@ -55,7 +55,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend-type="up"
         color="text-green-500"
         :icon="mdiAccountGroup"
-        number="88"
+        :number="88"
         label="DPT"
         suffix=" orang"
       />
@@ -88,7 +88,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend-type="up"
         color="text-blue-500"
         :icon="mdiChartTimelineVariant"
-        number="84.14"
+        :number="84.14"
         suffix="%"
         label="Partisipasi pemilih"
       />
@@ -110,7 +110,7 @@ const darkMode = computed(() => store.state.darkMode)
     />
 
     <card-component
-      title="Upadate terakhir pada 12:00 12-12-2021"
+      title="Update terakhir pada 12:00 12-12-2021"
       :icon="mdiFinance"
       :header-icon="mdiReload"
       class="mb-6"
@@ -118,21 +118,21 @@ const darkMode = computed(() => store.state.darkMode)
        <ul class="list-style-none">
          <li>
             <ProgressBar 
-               value="35"
+               :value="35"
                title="Sandhika dan Galih"
                bgColor="bg-green-400"
             />
          </li>
          <li>
             <ProgressBar 
-               value="55"
+               :value="55"
                title="Sandhika dan Galih"
                bgColor="bg-blue-400"
             />
          </li>
          <li>
             <ProgressBar 
-               value="55"
+               :value="55"
                title="Sandhika dan Galih"
                bgColor="bg-yellow-400"
             />
