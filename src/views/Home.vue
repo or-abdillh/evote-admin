@@ -111,8 +111,7 @@ const darkMode = computed(() => store.state.darkMode)
 
     <card-component
       title="Update terakhir pada 12:00 12-12-2021"
-      :icon="mdiFinance"
-      :header-icon="mdiReload"
+      :icon="mdiReload"
       class="mb-6"
     >
        <ul class="list-style-none">

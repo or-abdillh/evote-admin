@@ -26,7 +26,7 @@ export default [
   'Pemilih',
   [
 	{
-      to: '/',
+      to: '/DPT',
       icon: mdiAccountGroup,
       label: 'DPT'
     },

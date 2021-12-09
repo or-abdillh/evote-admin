@@ -13,6 +13,11 @@ const routes = [
     component: Home
   },
   {
+  	path: '/DPT',
+  	name: 'DPT',
+  	component: () => import('@/views/DPT.vue')
+  },
+  {
     meta: {
       title: 'Tables'
     },

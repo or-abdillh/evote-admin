@@ -1,5 +1,4 @@
 <script setup>
-import { mdiCog } from '@mdi/js'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import Icon from '@/components/Icon.vue'
@@ -33,10 +32,5 @@ const darkMode = computed(() => store.state.darkMode)
         {{ title }}
       </h1>
     </div>
-    <jb-button
-      :icon="mdiCog"
-      :outline="darkMode"
-      small
-    />
   </section>
 </template>
