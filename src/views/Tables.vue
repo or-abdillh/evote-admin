@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
-import { mdiMonitorCellphone, mdiAccountMultiple, mdiTableBorder, mdiTableOff } from '@mdi/js'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
+import { mdiMonitorCellphone, mdiAccountMultiple, mdiTableBorder, mdiTableOff} from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import ClientsTable from '@/components/ClientsTable.vue'
@@ -11,6 +12,9 @@ import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
 
 const titleStack = ref(['Admin', 'Tables'])
+
+const store = useStore()
+const users = computed(() => store.state.users)
 </script>
 
 <template>
@@ -30,7 +34,7 @@ const titleStack = ref(['Admin', 'Tables'])
       :icon="mdiAccountMultiple"
       has-table
     >
-      <clients-table checkable />
+      <clients-table :fields="users" />
     </card-component>
 
     <title-sub-bar

@@ -1,6 +1,6 @@
 {
-  "name": "Evote Admin",
-  "version": "1",
+  "name": "admin-one-vue-tailwind",
+  "version": "1.4.1",
   "scripts": {
     "dev": "vite --host",
     "serve": "vue-cli-service serve",

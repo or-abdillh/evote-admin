@@ -24,7 +24,27 @@ export default createStore({
 
     /* Sample data (commonly used) */
     clients: [],
-    history: []
+    history: [],
+    users: [
+    	{
+    		name: "Sandhika Galih",
+    		username: "sandhika",
+    		password: "sandhika",
+    		job: "Dosen",
+    		status: "Belum memilih",
+    		timestamp: 0,
+    		lastModified: "12-12-2021 18:00PM"
+    	},
+    	{
+    		name: "Atiya",
+    		username: "atiya",
+    		password: "atiya",
+    		job: "Mahasiswa",
+    		status: "Sudah memilih",
+    		timestamp: "12:12-12-2021 17:55PM",
+    		lastModified: "12-12-2021 18:00PM"
+    	}
+    ]
   },
   mutations: {
     /* A fit-them-all commit */

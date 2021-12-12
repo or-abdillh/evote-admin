@@ -102,14 +102,16 @@ const logout = () => console.log('logout')
       <div
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
-        <nav-bar-menu has-divider>
-          <user-avatar class="w-6 h-6 mr-3 inline-flex" />
-          <div>
-            <span>{{ userName }}</span>
-          </div>
-        </nav-bar-menu>
 
 		<nav-bar-menu-divider />
+
+         <nav-bar-item>
+            <user-avatar class="w-6 h-6 mr-3 inline-flex" />
+             <div>
+               <span>{{ userName }}</span>
+             </div>
+         </nav-bar-item>
+         
          <nav-bar-item @click="logout()">
            <nav-bar-item-label
              :icon="mdiLogout"
