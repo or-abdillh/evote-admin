@@ -31,7 +31,7 @@ export default [
       label: 'DPT'
     },
   	{
-      to: '/',
+      to: '/newUser',
       icon: mdiPlus,
       label: 'Tambah Pemilih'
     }

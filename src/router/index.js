@@ -18,6 +18,11 @@ const routes = [
   	component: () => import('@/views/DPT.vue')
   },
   {
+     path: '/newUser',
+     name: 'Tambah Pemilih',
+     component: () => import('@/views/NewUser.vue')
+  },
+  {
     meta: {
       title: 'Tables'
     },
