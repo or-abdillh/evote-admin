@@ -60,17 +60,6 @@ export default [
   'Examples',
   [
     {
-      to: '/tables',
-      label: 'Tables',
-      icon: mdiTable,
-      updateMark: true
-    },
-    {
-      to: '/forms',
-      label: 'Forms',
-      icon: mdiSquareEditOutline
-    },
-    {
       to: '/ui',
       label: 'UI',
       icon: mdiTelevisionGuide

@@ -118,12 +118,11 @@ const updateForm = reactive({
 
   <modal-box
     v-model="isModalDangerActive"
-    large-title="Please confirm"
+    large-title="Hapus data pemilih"
     button="danger"
     has-cancel
   >
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
+    <p>Anda akan menghapus data secara <b>permanen</b></p>
   </modal-box>
 
   <div
@@ -142,16 +141,16 @@ const updateForm = reactive({
   <table>
     <thead>
       <tr>
-        <th v-if="checkable" />
-        <th />
-        <th>Name</th>
-        <th>Username</th>
-        <th>Password</th>
-        <th>Job</th>
-        <th>Status</th>
-        <th>Timestamp</th>
-        <th>Edited</th>
-        <th />
+        <th v-if="checkable">
+          <th>Name</th>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Job</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+          <th>Edited</th>
+          <th>Actions</th>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -168,6 +167,9 @@ const updateForm = reactive({
         <td data-label="Password">
           {{ item.password }}
         </td>
+        <td data-label="Job">
+          {{ item.job }}
+        </td>
         <td data-label="Status">
           {{ item.status }}
         </td>
@@ -183,7 +185,7 @@ const updateForm = reactive({
             :title="item.lastModified"
           >{{ item.lastModified }}</small>
         </td>
-        <td class="actions-cell">
+        <td data-label="actions" class="actions-cell">
           <jb-buttons
             type="justify-start lg:justify-end"
             no-wrap
