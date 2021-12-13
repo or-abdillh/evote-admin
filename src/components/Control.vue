@@ -117,7 +117,11 @@ if (props.ctrlKFocus) {
       v-model="computedValue"
       :name="name"
       :class="inputElClass"
+      :placeholder="placeholder"
     >
+      <option>
+        {{ placeholder }}
+      </option>
       <option
         v-for="option in options"
         :key="option.id ?? option"

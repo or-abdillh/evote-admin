@@ -1,4 +1,4 @@
-<script setup>
+3<script setup>
 import { computed } from 'vue'
 import { mdiClose } from '@mdi/js'
 import JbButton from '@/components/JbButton.vue'

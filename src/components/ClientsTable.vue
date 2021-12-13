@@ -1,13 +1,14 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { mdiAccountEdit, mdiTrashCan } from '@mdi/js'
+import { mdiAccountEdit, mdiTrashCan, mdiEye, mdiBallot } from '@mdi/js'
 import ModalBox from '@/components/ModalBox.vue'
 import CheckboxCell from '@/components/CheckboxCell.vue'
 import Level from '@/components/Level.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
+import Field from  '@/components/Field.vue'
+import Control from '@/components/Control.vue'
 
 const props = defineProps({
   checkable: Boolean,
@@ -63,15 +64,56 @@ const checked = (isChecked, client) => {
   }
 }
 
+//Jobs
+const jobs = [{ id: 0, label: 'Dosen' }, { id: 1, label: 'Mahasiswa' }]
+
+//Update DPT handler
+const updateForm = reactive({
+	name: '',
+	username: '',
+	password: '',
+	job: jobs[0]
+})
+
 </script>
 
 <template>
+
+<!-- Update Modal -->
   <modal-box
     v-model="isModalActive"
-    title="Sample modal"
+    title="Update Data Pemilih"
+    has-cancel
   >
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
+    <Field label="Nama">
+      <Control
+        v-model="updateForm.name"
+        placeholder="Ubah nama DPT"
+        :icon="mdiAccountEdit" />
+    </Field>
+
+    <Field label="Username">
+      <Control
+       v-model="updateForm.username"
+       placeholder="Ubah username DPT"
+       :icon="mdiAccountEdit" 
+       class="mb-6"/>
+    </Field>
+
+    <Field label="Password">
+      <Control 
+        v-model="updateForm.password"
+        placeholder="Ubah password DPT"
+        :icon="mdiEye"
+        class="mb-6"/>
+    </Field>
+
+    <Field label="Job">
+      <Control
+       v-model="updateForm.job"
+       :options="jobs"
+       :icon="mdiAccountEdit"/>
+    </Field>
   </modal-box>
 
   <modal-box
