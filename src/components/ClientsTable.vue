@@ -72,8 +72,20 @@ const updateForm = reactive({
 	name: '',
 	username: '',
 	password: '',
-	job: jobs[0]
+	job: null
 })
+
+//Fill data automatic
+const btnUpdate = data => {
+	//Trigger modal
+	isModalActive.value = true
+
+	//Fill form
+	updateForm.name = data.name
+	updateForm.username = data.username
+	updateForm.password = data.password
+	updateForm.job = jobs.filter(j => j.label === data.job)[0]
+}
 
 </script>
 
@@ -137,7 +149,9 @@ const updateForm = reactive({
       {{ checkedRow.name }}
     </span>
   </div>
+<!-- End of Modal -->
 
+<!-- Table -->
   <table>
     <thead>
       <tr>
@@ -192,7 +206,7 @@ const updateForm = reactive({
               color="success"
               :icon="mdiAccountEdit"
               small
-              @click="isModalActive = true"
+              @click="btnUpdate(item)"
             />
             <jb-button
               color="danger"
