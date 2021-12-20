@@ -14,7 +14,7 @@ const props = defineProps({
   checkable: Boolean,
   fields: Array
 })
-
+ 
 const store = useStore()
 
 const darkMode = computed(() => store.state.darkMode)
@@ -64,10 +64,7 @@ const checked = (isChecked, client) => {
   }
 }
 
-//Jobs
-const jobs = [{ id: 0, label: 'Dosen' }, { id: 1, label: 'Mahasiswa' }]
-
-//Update DPT handler
+//Update Candidate handler
 const updateForm = reactive({
 	candidateNumber: 1,
 	chairmanName: 'Fulan bin Fulan',
@@ -75,6 +72,19 @@ const updateForm = reactive({
 	viceChairmanName: 'Fulanah binti fulah',
 	viceChairmanImage: '/female.jpg'
 })
+
+//Fill updateForm with current data
+const btnUpdate = data => {
+	//trigger modal
+	isModalActive.value = true
+
+	//Fill form
+	updateForm.candidateNumber = data.candidate_number
+	updateForm.chairmanName = data.chairman_name
+	updateForm.chairmanImage = data.chairman_image
+	updateForm.viceChairmanName = data.vice_chairman_name
+	updateForm.viceChairmanImage = data.vice_chairman_image
+}
 
 </script>
 
@@ -118,7 +128,7 @@ const updateForm = reactive({
         class="mb-6"/>
     </Field>
     
-    <Field label="Foto Wakil Keta Umum">
+    <Field label="Foto Wakil Ketua Umum">
       <Control 
         v-model="updateForm.viceChairmanImage"
         placeholder="Ubah link upload foto"
@@ -149,6 +159,9 @@ const updateForm = reactive({
       {{ checkedRow.name }}
     </span>
   </div>
+<!-- End of modal -->
+
+<!-- Table -->
 
   <table>
     <thead>
@@ -190,7 +203,7 @@ const updateForm = reactive({
               color="success"
               :icon="mdiAccountEdit"
               small
-              @click="isModalActive = true"
+              @click="[ btnUpdate(item), isModalActive = true ]"
             />
             <jb-button
               color="danger"

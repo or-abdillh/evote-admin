@@ -56,7 +56,7 @@ const cancel = () => confirmCancel('cancel')
     <card-component
       v-show="value"
       :title="title"
-      class="shadow-lg w-full max-h-modal md:w-3/5 lg:w-2/5 z-50"
+      class="shadow-lg w-full h-auto  md:w-3/5 lg:w-2/5 z-50"
       :header-icon="mdiClose"
       @header-icon-click="cancel"
     >
