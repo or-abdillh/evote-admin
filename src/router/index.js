@@ -23,6 +23,11 @@ const routes = [
      component: () => import('@/views/NewUser.vue')
   },
   {
+     path: '/candidates',
+     name: 'Kandidat',
+     component: () => import('@/views/Candidates.vue')
+  },
+  {
     meta: {
       title: 'Tables'
     },

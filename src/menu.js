@@ -39,7 +39,7 @@ export default [
   'Kandidat',
   [
   	{
-      to: '/',
+      to: '/candidates',
       icon: mdiAccountGroup,
       label: 'Pasangan Calon'
     },

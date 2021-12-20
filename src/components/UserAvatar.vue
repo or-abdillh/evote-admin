@@ -29,7 +29,7 @@ const name = computed(() => props.username ? props.username : store.state.userNa
 <template>
   <div>
     <img
-      :src="avatar"
+      :src="api"
       :alt="name"
       class="rounded-full block h-auto w-full max-w-full"
       :class="bg"
