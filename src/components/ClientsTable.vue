@@ -141,16 +141,14 @@ const updateForm = reactive({
   <table>
     <thead>
       <tr>
-        <th v-if="checkable">
-          <th>Name</th>
-          <th>Username</th>
-          <th>Password</th>
-          <th>Job</th>
-          <th>Status</th>
-          <th>Timestamp</th>
-          <th>Edited</th>
-          <th>Actions</th>
-        </th>
+         <th>Name</th>
+         <th>Username</th>
+         <th>Password</th>
+         <th>Job</th>
+         <th>Status</th>
+         <th>Timestamp</th>
+         <th>Edited</th>
+         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
