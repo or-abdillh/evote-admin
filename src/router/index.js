@@ -28,6 +28,11 @@ const routes = [
      component: () => import('@/views/Candidates.vue')
   },
   {
+  	path: '/newCandidate',
+  	name: 'Tambah Paslon',
+  	component: () => import('@/views/NewCandidate.vue')
+  },
+  {
     meta: {
       title: 'Tables'
     },

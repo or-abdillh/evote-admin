@@ -44,7 +44,7 @@ export default [
       label: 'Pasangan Calon'
     },
     {
-      to: '/',
+      to: '/newCandidate',
       icon: mdiPlus,
       label: 'Tambah Paslon'
     }
