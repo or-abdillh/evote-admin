@@ -15,7 +15,7 @@ export default {
 			.then(res => {
 				const response = res.data
 				//Success response
-				if (response.code === 200) callback(response)
+				if (response.code === 200) callback(response, true)
 			})	
 			.catch(err => {
 				if (err.response) {

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, reactive, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import {
   mdiAccountGroup,
@@ -27,12 +27,50 @@ import CardTransactionBar from '@/components/CardTransactionBar.vue'
 import CardClientBar from '@/components/CardClientBar.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
+import http from '@/helper/http.js'
 
 const titleStack = ref(['Admin', 'Dashboard'])
 
 const store = useStore()
 
 const darkMode = computed(() => store.state.darkMode)
+
+//Fetch data dashboard from API every 30s
+const dashboard = reactive({
+   participants: 0,
+   incomingVote: 0,
+   participations: 0,
+   haventVoted: 0,
+   candidates: 0
+})
+
+const fillDashboard = res => {
+   dashboard.participants = res.participants
+   dashboard.participations = res.participations
+   dashboard.incomingVote = res.incomingVote
+   dashboard.haventVoted = res.haventVoted
+   dashboard.candidates = res.candidates
+}
+
+const lastUpdated = ref('')
+const fillLastUpdated = () => lastUpdated.value = `Update terakhir pada ${new Date().toLocaleString('id')}`
+
+const getDashboard = () => {
+   http.get('master/dashboard', (data, status) => {
+      if (status) {
+         const res = data.response
+         fillDashboard(res)
+         fillLastUpdated()
+      }
+   })
+}
+
+onMounted(() => getDashboard())
+
+setInterval(() => {
+   getDashboard()
+}, 60000)
+
 </script>
 
 <template>
@@ -45,7 +83,7 @@ const darkMode = computed(() => store.state.darkMode)
       <card-widget
         color="text-green-500"
         :icon="mdiAccountMultiple"
-        :number="4"
+        :number="dashboard.candidates"
         label="Kandidat Paslon"
         suffix=" paslon"
       />
@@ -55,7 +93,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend-type="up"
         color="text-green-500"
         :icon="mdiAccountGroup"
-        :number="88"
+        :number="dashboard.participants"
         label="DPT"
         suffix=" orang"
       />
@@ -66,7 +104,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend-type="up"
         color="text-blue-500"
         :icon="mdiVote"
-        :number="56"
+        :number="dashboard.incomingVote"
         suffix=" suara"
         label="Suara Masuk"
       />
@@ -77,7 +115,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend-type="down"
         color="text-red-500"
         :icon="mdiAccountAlert"
-        :number="32"
+        :number="dashboard.haventVoted"
         suffix=" orang"
         label="Belum memilih"
       />
@@ -88,7 +126,7 @@ const darkMode = computed(() => store.state.darkMode)
         trend-type="up"
         color="text-blue-500"
         :icon="mdiChartTimelineVariant"
-        :number="84.14"
+        :number="dashboard.participations"
         suffix="%"
         label="Partisipasi pemilih"
       />
@@ -110,9 +148,10 @@ const darkMode = computed(() => store.state.darkMode)
     />
 
     <card-component
-      title="Update terakhir pada 12:00 12-12-2021"
+      :title="lastUpdated"
       :icon="mdiReload"
       class="mb-6"
+      @click="getDashboard"
     >
        <ul class="list-style-none">
          <li>
