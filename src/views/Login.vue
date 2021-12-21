@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import FullScreenSection from '@/components/FullScreenSection.vue'
@@ -10,17 +10,24 @@ import Control from '@/components/Control.vue'
 import Divider from '@/components/Divider.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
+import http from '@/helper/http.js'
 
 const form = reactive({
-  login: '',
-  pass: '',
-  remember: ['remember']
+  username: '',
+  password: '',
 })
 
 const router = useRouter()
+const isLoginFail = ref(false)
 
 const submit = () => {
-  router.push('/')
+  http.post('master/login', form, (data, status) => {
+     if (status) {
+        localStorage.setItem('$evote-token', data.response.token)
+        setTimeout(() => router.push({ name: 'home' }), 350)
+     }
+     else isLoginFail.value = true
+  })
 }
 </script>
 <template>
@@ -39,7 +46,7 @@ const submit = () => {
         help="Please enter your login"
       >
         <control
-          v-model="form.login"
+          v-model="form.username"
           :icon="mdiAccount"
           name="login"
           autocomplete="username"
@@ -51,7 +58,7 @@ const submit = () => {
         help="Please enter your password"
       >
         <control
-          v-model="form.pass"
+          v-model="form.password"
           :icon="mdiAsterisk"
           type="password"
           name="password"
@@ -59,14 +66,10 @@ const submit = () => {
         />
       </field>
 
-      <check-radio-picker
-        v-model="form.remember"
-        name="remember"
-        :options="{ remember: 'Remember' }"
-      />
-
       <divider />
-
+      <small class="text-red-500 mb-2 block" v-if="isLoginFail">
+         Your login fail, username or password is wrong!
+      </small>
       <jb-buttons>
         <jb-button
           type="submit"

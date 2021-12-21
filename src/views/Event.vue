@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock, mdi } from '@mdi/js'
+import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import CardComponent from '@/components/CardComponent.vue'
