@@ -28,6 +28,7 @@ import CardClientBar from '@/components/CardClientBar.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import http from '@/helper/http.js'
+import countdown from '@/helper/countdown.js'
 
 const titleStack = ref(['Admin', 'Dashboard'])
 
@@ -65,7 +66,7 @@ const getDashboard = () => {
    })
 }
 
-//Get data quick counr from API
+//Get data quick count from API
 const listBg = ['bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-red-500']
 const quickCount = ref([])
 
@@ -75,18 +76,53 @@ const fillQuickCount = () => {
    })
 }
 
+//Countdown handler
+const countdownText = ref('')
+const start = ref(0)
+const finish = ref(0)
+
+//Choose state
+const chooseState = (start, finish) => {
+   const now = new Date().getTime()
+   if ( now >= start && now < finish ) {
+      //Running countdown
+      const run = setInterval(() => {
+         countdown(countdownText, start, finish, run, chooseState(start, finish))
+      }, 1000)
+   } else if ( now < start ) {
+      countdownText.value = "Belum dimulai"
+   } else {
+      countdownText.value = "Berakhir"
+   }
+}
+
+//API
+const getEvent = () => {
+   http.get('master/event', (data, status) => {
+      if (status) {
+         const res = data.response[0]
+         start.value = res.event_start_at
+         finish.value = res.event_finish_at
+         chooseState(start.value, finish.value)
+      }
+   })
+}
+
 //Reload manual
 const reload = () => {
    getDashboard()
    fillQuickCount()
+   chooseState(start.value, finish.value);
 }
 
 //Fetching data
 onMounted(() => {
+   getEvent()
    getDashboard()
    fillQuickCount()
 })
 
+//Request every 1 minutes
 setInterval(() => {
    getDashboard()
    fillQuickCount()
@@ -151,12 +187,11 @@ setInterval(() => {
         suffix="%"
         label="Partisipasi pemilih"
       />
-      
       <!-- Countdown -->
       <card-widget
         color="text-green-500"
         :icon="mdiClock"
-        text="3j 45m 22s"
+        :text="countdownText"
         label="Countdown"
       />
       
@@ -171,7 +206,7 @@ setInterval(() => {
     <card-component
       :title="lastUpdated"
       :icon="mdiReload"
-      class="mb-6"
+      class="mb-6 pointer"
       @click="reload"
     >
        <ul class="list-style-none">
