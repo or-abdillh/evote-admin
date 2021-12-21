@@ -19,23 +19,31 @@ const routes = [
   },
   {
      path: '/newUser',
-     name: 'Tambah Pemilih',
+     name: 'tambahPemilih',
      component: () => import('@/views/NewUser.vue')
   },
   {
      path: '/candidates',
-     name: 'Kandidat',
+     name: 'kandidat',
      component: () => import('@/views/Candidates.vue')
   },
   {
   	path: '/newCandidate',
-  	name: 'Tambah Paslon',
+  	name: 'tambahPaslon',
   	component: () => import('@/views/NewCandidate.vue')
   },
   {
      path: '/event',
-     name: 'Kelola Acara',
+     name: 'kelolaAcara',
      component: () => import('@/views/Event.vue')
+  },
+  {
+     meta: {
+        fullScreen: true
+     },
+     path: '/login',
+     name: 'login',
+     component: () => import('@/views/Login.vue')
   }
 ]
 

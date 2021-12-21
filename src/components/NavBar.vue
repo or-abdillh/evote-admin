@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import {
   mdiForwardburger,
   mdiBackburger,
@@ -21,11 +22,11 @@ import NavBarItem from '@/components/NavBarItem.vue'
 import NavBarItemLabel from '@/components/NavBarItemLabel.vue'
 import NavBarMenu from '@/components/NavBarMenu.vue'
 import NavBarMenuDivider from '@/components/NavBarMenuDivider.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
 import Icon from '@/components/Icon.vue'
 import NavBarSearch from '@/components/NavBarSearch.vue'
 
 const store = useStore()
+const router = useRouter()
 
 const toggleLightDark = () => {
   store.dispatch('darkMode')
@@ -53,7 +54,9 @@ const menuOpenLg = () => {
   store.dispatch('asideLgToggle', true)
 }
 
-const logout = () => console.log('logout')
+const logout = () => {
+   router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -106,7 +109,6 @@ const logout = () => console.log('logout')
 		<nav-bar-menu-divider />
 
          <nav-bar-item>
-            <user-avatar class="w-6 h-6 mr-3 inline-flex" />
              <div>
                <span>{{ userName }}</span>
              </div>

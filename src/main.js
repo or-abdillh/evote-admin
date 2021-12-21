@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import http from '@/helper/http'
 import { darkModeKey } from '@/config.js'
 
 import './css/main.css'
@@ -21,10 +22,18 @@ if ((localStorageDarkModeValue === null && window.matchMedia('(prefers-color-sch
 /* Default title tag */
 const defaultDocumentTitle = 'Admin One Vue 3 Tailwind'
 
-/* Collapse mobile aside menu on route change */
-router.beforeEach(to => {
-  store.dispatch('asideMobileToggle', false)
-  store.dispatch('asideLgToggle', false)
+//Navigation Guard
+router.beforeEach((to, next) => {
+   /* Collapse mobile aside menu on route change */
+   store.dispatch('asideMobileToggle', false)
+   store.dispatch('asideLgToggle', false)
+   
+	http.get('auth', (data, response = true) => {
+		//Auth token success
+		//alert(JSON.stringify(data))
+		if (response && to.name !== 'login') next()
+		else router.push({ name: 'login' }) //Fail 
+	})
 })
 
 router.afterEach(to => {

@@ -12,8 +12,8 @@ import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 
 const form = reactive({
-  login: 'john.doe',
-  pass: 'highly-secure-password-fYjUw-',
+  login: '',
+  pass: '',
   remember: ['remember']
 })
 
@@ -23,7 +23,6 @@ const submit = () => {
   router.push('/')
 }
 </script>
-
 <template>
   <full-screen-section
     v-slot="{ cardClass, cardRounded }"
