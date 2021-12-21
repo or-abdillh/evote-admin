@@ -1,0 +1,93 @@
+<script setup>
+import { ref, reactive, computed } from 'vue'
+import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock, mdi } from '@mdi/js'
+import MainSection from '@/components/MainSection.vue'
+import Notification from '@/components/Notification.vue'
+import CardComponent from '@/components/CardComponent.vue'
+import TitleBar from '@/components/TitleBar.vue'
+import HeroBar from '@/components/HeroBar.vue'
+import TitleSubBar from '@/components/TitleSubBar.vue'
+import Field from '@/components/Field.vue'
+import Control from '@/components/Control.vue'
+import JbButtons from '@/components/JbButtons.vue'
+import JbButton from '@/components/JbButton.vue'
+import CardWidget from '@/components/CardWidget.vue'
+
+const titleStack = ref(['Admin', 'Kelola Acara'])
+
+
+//Form handler
+const form = reactive({
+	eventStartAt: '',
+	eventFinishAt: '',
+	eventTitle: '',
+	passcode: ''
+})
+
+</script>
+
+<template>
+  <title-bar :title-stack="titleStack" />
+  <hero-bar>Kelola Kegiatan Evoting Anda</hero-bar>
+  <main-section>
+     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
+        <CardWidget
+        color="text-green-500"
+        text="2021-12-21 09:00"
+        label="Acara dimulai pada"/>
+        
+        <CardWidget
+        color="text-red-500"
+        text="2021-12-21 18:00"
+        label="Acara berakhir pada"/>
+        
+        <CardWidget
+        color="text-green-500"
+        text="HIMATI"
+        label="Passcode"/>
+     </div>
+     
+  <card-component
+      class="mb-6"
+    >
+       <Field label="Atur waktu dan tanggal">
+          <Control
+            v-model="form.eventStartAt"
+            class="mb-6"
+            type="datetime-local"
+            value="2021-12-25 T09:00"
+            min="2021-12-01 T12:00"
+            max="2022-12-01 T12:00"
+            placeholder="Tanggal dan waktu acara dimulai" />
+      </Field>
+      <Field>
+         <Control
+            v-model="form.eventFinishAt"
+            type="datetime-local"
+            value="2021-12-25 T09:00"
+            min="2021-12-01 T12:00"
+            max="2022-12-01 T12:00"
+            placeholder="Tanggal dan waktu acara berakhir"/>
+      </Field>
+      
+      <Field label="Atur tema kegiatan anda">
+         <Control
+            type="textarea"
+            placeholder="Tema kegiatan akan muncul pada aplikasi evote pemilih"/>
+      </Field>
+      
+      <Field label="Atur passcode">
+         <Control
+            type="text"
+            placeholder="Tentukan passcode pada kegiatan anda"/>
+      </Field>
+
+       <JbButtons type="justify-start lg:justify-end">
+         <JbButton 
+           label="Submit"
+           :icon="mdiContentSaveMoveOutline"
+           color="info" />
+       </JbButtons>
+    </card-component>
+  </main-section>
+</template>
