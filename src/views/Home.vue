@@ -45,6 +45,15 @@ const dashboard = reactive({
    candidates: 0
 })
 
+//Trend percent handler
+const trends = reactive({
+   incomingVote: '0%',
+   participations: '0%',
+   haventVoted: '0%'
+})
+
+const createTrend = (before, after) => before < 1 ? "0%" : ((after - before) / before * 100).toFixed(2) + '%'
+
 const fillDashboard = res => {
    dashboard.participants = res.participants
    dashboard.participations = res.participations
@@ -60,6 +69,10 @@ const getDashboard = () => {
    http.get('master/dashboard', (data, status) => {
       if (status) {
          const res = data.response
+         //createTrend
+         trends.participations = createTrend(dashboard.participations, res.participations)
+         trends.incomingVote = createTrend(dashboard.incomingVote, res.incomingVote)
+         trends.haventVoted = createTrend(dashboard.haventVoted, res.haventVoted)
          fillDashboard(res)
          fillLastUpdated()
       }
@@ -110,9 +123,13 @@ const getEvent = () => {
 
 //Reload manual
 const reload = () => {
+   clearInterval(interval)
    getDashboard()
    fillQuickCount()
    chooseState(start.value, finish.value);
+   setTimeout(() => {
+   	interval()
+   }, 5000)
 }
 
 //Fetching data
@@ -122,11 +139,11 @@ onMounted(() => {
    fillQuickCount()
 })
 
-//Request every 1 minutes
-setInterval(() => {
+//Request every 30 seconds
+const interval = setInterval(() => {
    getDashboard()
    fillQuickCount()
-}, 60000)
+}, 30000)
 
 </script>
 
@@ -157,7 +174,7 @@ setInterval(() => {
       
       <!-- Suara masuk -->
       <card-widget
-        trend="12%"
+        :trend="trends.incomingVote"
         trend-type="up"
         color="text-blue-500"
         :icon="mdiVote"
@@ -168,7 +185,7 @@ setInterval(() => {
       
       <!-- Belum memilih -->
       <card-widget
-        trend="5%"
+        :trend="trends.haventVoted"
         trend-type="down"
         color="text-red-500"
         :icon="mdiAccountAlert"
@@ -179,7 +196,7 @@ setInterval(() => {
       
       <!-- Partisipasi Pemilih -->
       <card-widget
-        trend="2%"
+        :trend="trends.participations"
         trend-type="up"
         color="text-blue-500"
         :icon="mdiChartTimelineVariant"
