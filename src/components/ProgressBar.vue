@@ -8,6 +8,9 @@
          type: Number,
          default: 45
       },
+      percent: {
+         default: '45%'
+      },
       bgColor: {
       	type: String,
       	default: 'bg-green-400'
@@ -24,7 +27,7 @@
                :class="bgColor"
                class="h-full grid place-items-center text-xs leading-none py-1 text-center text-white" 
                :style="{ width: value + '%' }">
-                  {{ value }}%
+                  {{ percent }}
                </div>
             </div>
          </div>

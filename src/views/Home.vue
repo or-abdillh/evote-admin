@@ -35,7 +35,7 @@ const store = useStore()
 
 const darkMode = computed(() => store.state.darkMode)
 
-//Fetch data dashboard from API every 30s
+//Fetch data dashboard from API
 const dashboard = reactive({
    participants: 0,
    incomingVote: 0,
@@ -65,10 +65,31 @@ const getDashboard = () => {
    })
 }
 
-onMounted(() => getDashboard())
+//Get data quick counr from API
+const listBg = ['bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-red-500']
+const quickCount = ref([])
+
+const fillQuickCount = () => {
+   http.get('master/quick-count', (data, status) => {
+      if (status) quickCount.value = data.response
+   })
+}
+
+//Reload manual
+const reload = () => {
+   getDashboard()
+   fillQuickCount()
+}
+
+//Fetching data
+onMounted(() => {
+   getDashboard()
+   fillQuickCount()
+})
 
 setInterval(() => {
    getDashboard()
+   fillQuickCount()
 }, 60000)
 
 </script>
@@ -151,30 +172,17 @@ setInterval(() => {
       :title="lastUpdated"
       :icon="mdiReload"
       class="mb-6"
-      @click="getDashboard"
+      @click="reload"
     >
        <ul class="list-style-none">
-         <li>
-            <ProgressBar 
-               :value="35"
-               title="Sandhika dan Galih"
-               bgColor="bg-green-400"
-            />
-         </li>
-         <li>
-            <ProgressBar 
-               :value="55"
-               title="Sandhika dan Galih"
-               bgColor="bg-blue-400"
-            />
-         </li>
-         <li>
-            <ProgressBar 
-               :value="55"
-               title="Sandhika dan Galih"
-               bgColor="bg-yellow-400"
-            />
-         </li>
+          <template v-for="(count, index) in quickCount" :key="index">
+             <li>
+                <ProgressBar
+                  :value="count.decimal"
+                  :percent="count.percent"
+                  :bgColor="listBg[index]"/>
+             </li>
+          </template>
        </ul>
     </card-component>
   </main-section>
