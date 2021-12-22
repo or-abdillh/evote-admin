@@ -20,7 +20,7 @@ const eventStartAt = ref('')
 const eventFinishAt = ref('')
 const passcode = ref('passcode')
 
-onMounted(() => {
+const getEvent = () => {
    http.get('master/event', (data, status) => {
       if (status) {
          const res = data.response[0]
@@ -29,6 +29,10 @@ onMounted(() => {
          passcode.value = res.passcode
       }
    })
+}
+
+onMounted(() => {
+   getEvent()
 })
 
 //Form handler
@@ -39,11 +43,33 @@ const form = reactive({
 	passcode: ''
 })
 
+//Notification handler
+const showNotif = ref(false)
+const textNotif = ref('')
+
+//Update
+const btnUpdate = () => {
+   //Convert to unix time
+   form.event_start_at = new Date(form.event_start_at).getTime()
+   form.event_finish_at = new Date(form.event_finish_at).getTime()
+   
+   http.put('master/update-event', form,  (status, err = '') => {
+      if ( status ) {
+         textNotif.value = 'Action success'
+         getEvent()
+      }
+      else textNotif.value = 'Action fail : ' + err
+      showNotif.value = true
+   })
+}
 </script>
 
 <template>
   <title-bar :title-stack="titleStack" />
   <hero-bar>Kelola Kegiatan Evoting Anda</hero-bar>
+  <Notification v-if="showNotif">
+     {{ textNotif }}
+  </Notification>
   <main-section>
      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
         <CardWidget
@@ -101,6 +127,7 @@ const form = reactive({
 
        <JbButtons type="justify-start lg:justify-end">
          <JbButton 
+           @click="btnUpdate"
            label="Submit"
            :icon="mdiContentSaveMoveOutline"
            color="info" />

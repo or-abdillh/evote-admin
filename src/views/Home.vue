@@ -181,7 +181,7 @@ setInterval(() => {
       
       <!-- Belum memilih -->
       <card-widget
-        trend="trends.hav"
+        :trend="trends.haventVoted"
         trend-type="down"
         color="text-red-500"
         :icon="mdiAccountAlert"
@@ -226,6 +226,7 @@ setInterval(() => {
           <template v-for="(count, index) in quickCount" :key="index">
              <li>
                 <ProgressBar
+                  :title="count.candidate"
                   :value="count.decimal"
                   :percent="count.percent"
                   :bgColor="listBg[index]"/>

@@ -26,11 +26,6 @@ export default {
 	},
 	//METHOD POST
 	post( extend = '', body, callback ) {
-		//Creaate Headers
-		const headers = {
-			'content-type': 'application/json',
-			'token': localStorage.getItem('$evote-token') || null
-		}
 		axios.post(`${baseURL}/${extend}`, body, { headers: headers() })
 		  .then(res => {
 		  	if (res.data.code === 200) callback(res.data, true)
@@ -40,5 +35,16 @@ export default {
 			  callback(err.response.data, false)
 		    }
 		  })
+	},
+	
+	//METHOD PUT
+	put( extend = '', body, callback ){
+	   axios.put(`${baseURL}/${extend}`, body, { headers: headers() })
+	      .then(res => {
+	         if ( res.data.code === 200 ) callback(true)
+	      })
+	      .catch( err => {
+	         if ( err.response ) callback(false, err)
+	      })
 	}
 }
