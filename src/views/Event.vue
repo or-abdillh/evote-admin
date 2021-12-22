@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
@@ -12,15 +12,30 @@ import Control from '@/components/Control.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import CardWidget from '@/components/CardWidget.vue'
+import http from '@/helper/http.js'
 
 const titleStack = ref(['Admin', 'Kelola Acara'])
+//Get API Handler
+const eventStartAt = ref('')
+const eventFinishAt = ref('')
+const passcode = ref('passcode')
 
+onMounted(() => {
+   http.get('master/event', (data, status) => {
+      if (status) {
+         const res = data.response[0]
+         eventStartAt.value = new Date(res.event_start_at).toLocaleString('id')
+         eventFinishAt.value = new Date(res.event_finish_at).toLocaleString('id')
+         passcode.value = res.passcode
+      }
+   })
+})
 
 //Form handler
 const form = reactive({
-	eventStartAt: '',
-	eventFinishAt: '',
-	eventTitle: '',
+	event_start_at: '',
+	event_finish_at: '',
+	event_title: '',
 	passcode: ''
 })
 
@@ -33,17 +48,17 @@ const form = reactive({
      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
         <CardWidget
         color="text-green-500"
-        text="2021-12-21 09:00"
+        :text="eventStartAt"
         label="Acara dimulai pada"/>
         
         <CardWidget
         color="text-red-500"
-        text="2021-12-21 18:00"
+        :text="eventFinishAt"
         label="Acara berakhir pada"/>
         
         <CardWidget
         color="text-green-500"
-        text="HIMATI"
+        :text="passcode"
         label="Passcode"/>
      </div>
      
@@ -52,7 +67,7 @@ const form = reactive({
     >
        <Field label="Atur waktu dan tanggal">
           <Control
-            v-model="form.eventStartAt"
+            v-model="form.event_start_at"
             class="mb-6"
             type="datetime-local"
             value="2021-12-25 T09:00"
@@ -62,7 +77,7 @@ const form = reactive({
       </Field>
       <Field>
          <Control
-            v-model="form.eventFinishAt"
+            v-model="form.event_finish_at"
             type="datetime-local"
             value="2021-12-25 T09:00"
             min="2021-12-01 T12:00"
@@ -72,12 +87,14 @@ const form = reactive({
       
       <Field label="Atur tema kegiatan anda">
          <Control
+            v-model="form.event_title"
             type="textarea"
             placeholder="Tema kegiatan akan muncul pada aplikasi evote pemilih"/>
       </Field>
       
       <Field label="Atur passcode">
          <Control
+            v-model="form.passcode"
             type="text"
             placeholder="Tentukan passcode pada kegiatan anda"/>
       </Field>

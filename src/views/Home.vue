@@ -123,13 +123,9 @@ const getEvent = () => {
 
 //Reload manual
 const reload = () => {
-   clearInterval(interval)
    getDashboard()
    fillQuickCount()
    chooseState(start.value, finish.value);
-   setTimeout(() => {
-   	interval()
-   }, 5000)
 }
 
 //Fetching data
@@ -139,11 +135,11 @@ onMounted(() => {
    fillQuickCount()
 })
 
-//Request every 30 seconds
-const interval = setInterval(() => {
+//Request every 1 minutes
+setInterval(() => {
    getDashboard()
    fillQuickCount()
-}, 30000)
+}, 60000)
 
 </script>
 
@@ -185,7 +181,7 @@ const interval = setInterval(() => {
       
       <!-- Belum memilih -->
       <card-widget
-        :trend="trends.haventVoted"
+        trend="trends.hav"
         trend-type="down"
         color="text-red-500"
         :icon="mdiAccountAlert"
