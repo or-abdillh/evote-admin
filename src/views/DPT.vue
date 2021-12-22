@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { mdiAccountGroup, mdiReload } from '@mdi/js'
 import DataTables from '@/components/DataTables.vue'
@@ -11,11 +11,18 @@ import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
+import http from '@/helper/http.js'
 
 const titleStack = ref(['Admin', 'DPT'])
 
 const store = useStore()
-const users = computed(() => store.state.users)
+//Get data accounts to API
+const users = ref([])
+onMounted(() => {
+   http.get('master/accounts', (data, status) => {
+      if (status) users.value = data.response
+   })
+})
 
 </script>
 

@@ -65,14 +65,14 @@ const checked = (isChecked, client) => {
 }
 
 //Jobs
-const jobs = [{ id: 0, label: 'Dosen' }, { id: 1, label: 'Mahasiswa' }]
+const jobs = [{ id: 1, label: 'Dosen' }, { id: 2, label: 'Mahasiswa' }]
 
 //Update DPT handler
 const updateForm = reactive({
 	name: '',
 	username: '',
 	password: '',
-	job: null
+	job: jobs[0]
 })
 
 //Fill data automatic
@@ -81,10 +81,12 @@ const btnUpdate = data => {
 	isModalActive.value = true
 
 	//Fill form
-	updateForm.name = data.name
+	updateForm.name = data.fullname
 	updateForm.username = data.username
 	updateForm.password = data.password
-	updateForm.job = jobs.filter(j => j.label === data.job)[0]
+	updateForm.job = jobs.filter(j => j.label === data.job_name)[0].id
+	//alert(JSON.stringify())
+	//alert(JSON.stringify(jobs.filter(j => j.label === data.job_name)[0]))
 }
 
 </script>
@@ -171,7 +173,7 @@ const btnUpdate = data => {
         :key="item.username"
       >
         <td data-label="Name">
-          {{ item.name }}
+          {{ item.fullname }}
         </td>
         <td data-label="Username">
           {{ item.username }}
@@ -180,22 +182,22 @@ const btnUpdate = data => {
           {{ item.password }}
         </td>
         <td data-label="Job">
-          {{ item.job }}
+          {{ item.job_name }}
         </td>
         <td data-label="Status">
-          {{ item.status }}
+          {{ item.status_vote > 0 ? 'sudah' : 'belum'}}
         </td>
         <td data-label="Timestamp">
           <small
             class="text-gray-500 dark:text-gray-400"
             :title="item.timestamp"
-          >{{ item.timestamp }}</small>
+          >{{ new Date(item.time_stamp).toLocaleString('id') }}</small>
         </td>
         <td data-label="Edited">
           <small
             class="text-gray-500 dark:text-gray-400"
             :title="item.lastModified"
-          >{{ item.lastModified }}</small>
+          >{{ new Date(item.lastModified).toLocaleString('id') }}</small>
         </td>
         <td data-label="actions" class="actions-cell">
           <jb-buttons
