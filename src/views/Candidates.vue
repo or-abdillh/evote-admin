@@ -1,8 +1,6 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { useStore } from 'vuex'
+import { ref, onMounted } from 'vue'
 import { mdiAccountGroup, mdiReload } from '@mdi/js'
-import candidates from '@/candidates.js'
 import DataTables from '@/components/DataTables.vue'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
@@ -12,10 +10,17 @@ import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
+import http from '@/helper/http.js'
 
 const titleStack = ref(['Admin', 'Pasangan Calon'])
 
-const store = useStore()
+//Get data from API
+const candidates = ref([])
+onMounted(() => {
+   http.get('master/candidates', (data, status) => {
+      if (status) candidates.value = data.response
+   })
+})
 
 </script>
 
