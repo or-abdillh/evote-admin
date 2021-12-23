@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { mdiAccountGroup, mdiContentSaveMoveOutline } from '@mdi/js'
+import { useStore } from 'vuex'
+import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiInformation } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -11,18 +12,41 @@ import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
+import http from '@/helper/http.js'
 
 const titleStack = ref(['Admin', 'Tambah Pemilih'])
+const store = useStore()
 
-const jobs = [{ id: 0, label: 'Dosen' }, { id: 1, label: 'Mahasiswa' }]
-
+const jobs = [{ id: 1, label: 'Dosen' }, { id: 2, label: 'Mahasiswa' }]
+const genders = ['male', 'female']
 //Form handler
 const form = reactive({
-	name: '',
+	fullname: '',
 	username: '',
 	password: '',
-	job: jobs[0]
+	job_id: '',
+	gender: ''
 })
+
+const submit = () => {
+   http.post('master/insert-account', form, (data, status) => {
+      if (status) {
+         showNotif.value = true
+         textNotif.value = data.response
+         colorNotif.value = 'info'
+      }
+      else { 
+         textNotif.value = data.sqlMessage
+         showNotif.value = true
+         colorNotif.value = 'warning'
+      }
+   })
+}
+
+//Notification handler
+const showNotif = ref(false)
+const textNotif = ref('')
+const colorNotif = ref()
 
 </script>
 
@@ -30,12 +54,19 @@ const form = reactive({
   <title-bar :title-stack="titleStack" />
   <hero-bar>Tambah Pemilih Baru pada DPT</hero-bar>
   <main-section>
+   <Notification 
+      v-on:close="showNotif = false"
+      v-if="showNotif"
+      :color="colorNotif"
+      :icon="mdiInformation">
+        {{ textNotif }}
+   </Notification>
   <card-component
       class="mb-6"
     >
       <Field label="Nama">
         <Control
-          v-model="form.name"
+          v-model="form.fullname"
           class="mb-6"
           placeholder="Nama lengkap pemilih" />
       </Field>
@@ -56,14 +87,22 @@ const form = reactive({
 
        <Field label="Job">
          <Control
-           v-model="form.job"
+           v-model="form.job_id"
            :options="jobs"
+           class="mb-6" />
+       </Field>
+       
+       <Field label="Gender">
+         <Control
+           v-model="form.gender"
+           :options="genders"
            class="mb-6" />
        </Field>
 
        <JbButtons type="justify-start lg:justify-end">
          <JbButton 
            label="Submit"
+           @click="submit"
            :icon="mdiContentSaveMoveOutline"
            color="info" />
        </JbButtons>
