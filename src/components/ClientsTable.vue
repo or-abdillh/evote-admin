@@ -81,6 +81,9 @@ const updateForm = reactive({
 	job_id: jobs[0].id
 })
 
+//Define emits
+const emits = defineEmits(['update-success', 'update-fail', 'delete-success', 'delete-fail'])
+
 //Fill data automatic
 const btnUpdate = data => {
 	//Trigger modal
@@ -94,15 +97,36 @@ const btnUpdate = data => {
 	updateForm.job_name = jobs.filter(j => j.label === data.job_name)[0].id
 }
 
-//Define emits
-const emits = defineEmits(['update-success', 'update-fail'])
-
 const update = () => {
    //Post data to API
 	http.put('master/update-account', updateForm, (status, err = '') => {
 	   if ( status ) emits('update-success')
-	   else emits('update-fail')
+	   else {
+	      store.state.errorFromServer = err
+	      emits('update-fail')
+	   }
 	})
+}
+
+//Delete handler
+const key = ref({
+   username: ''
+})
+const btnDelete = data => {
+   //Trigger modal
+   isModalDangerActive.value = true
+   
+   key.value.username = data.username
+}
+
+const deleteAccount = () => {
+   http.delete('master/remove-account', key.value, (status, err = '') => {
+      if ( status ) emits('delete-success')
+      else {
+         store.state.errorFromServer = err
+         emits('delete-fail')
+      }
+   })
 }
 </script>
 
@@ -110,7 +134,7 @@ const update = () => {
 
 <!-- Update Modal -->
   <modal-box
-   v-on:confirm="update()"
+    v-on:confirm="update()"
     v-model="isModalActive"
     title="Update Data Pemilih"
     has-cancel
@@ -154,6 +178,7 @@ const update = () => {
   </modal-box>
 
   <modal-box
+    v-on:confirm="deleteAccount()"
     v-model="isModalDangerActive"
     large-title="Hapus data pemilih"
     button="danger"
@@ -241,7 +266,7 @@ const update = () => {
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="btnDelete(item)"
             />
           </jb-buttons>
         </td>

@@ -24,6 +24,8 @@ const getAccounts = () => {
       if (status) users.value = data.response
    })
 }
+//Get errorFromServer
+const err = computed(() => store.state.errorFromServer)
 
 //Notification handler
 const showNotif = ref(false)
@@ -37,9 +39,22 @@ const updateSuccess = () => {
    colorNotif.value = 'info'
 }
 
+const deleteSuccess = () => {
+   getAccounts()
+   showNotif.value = true
+   textNotif.value = 'Delete data success'
+   colorNotif.value = 'info'
+}
+
 const updateFail = () => {
    showNotif.value = true
-   textNotif.value = 'Update data fail, something wrong'
+   textNotif.value = err.value
+   colorNotif.value = 'warning'
+}
+
+const deleteFail = () => {
+   showNotif.value = true
+   textNotif.value = err.value
    colorNotif.value = 'warning'
 }
 
@@ -64,7 +79,12 @@ onMounted(() => {
       class="mb-6"
       has-table
     >
-       <clients-table v-on:update-fail="updateFail()" v-on:update-success="updateSuccess()" :fields="users" />
+       <clients-table 
+         v-on:update-fail="updateFail()" 
+         v-on:update-success="updateSuccess()"
+         v-on:delete-success="deleteSuccess()"
+         v-on:delete-fail="deleteFail()"
+         :fields="users" />
     </card-component>
   </main-section>
 </template>

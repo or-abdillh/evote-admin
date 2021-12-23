@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const baseURL = 'https://dry-falls-66840.herokuapp.com'
 
-const headers = () => {
+const createHeaders = () => {
    return {
       'content-type': 'application/json',
 		'token': localStorage.getItem('$evote-token') || null
@@ -12,7 +12,7 @@ const headers = () => {
 export default {
     //METHOD GET
 	get( extend = '', callback ) {
-		axios.get(`${baseURL}/${extend}`, { headers: headers() })
+		axios.get(`${baseURL}/${extend}`, { headers: createHeaders() })
 			.then(res => {
 				const response = res.data
 				//Success response
@@ -26,7 +26,7 @@ export default {
 	},
 	//METHOD POST
 	post( extend = '', body, callback ) {
-		axios.post(`${baseURL}/${extend}`, body, { headers: headers() })
+		axios.post(`${baseURL}/${extend}`, body, { headers: createHeaders() })
 		  .then(res => {
 		  	if (res.data.code === 200) callback(res.data, true)
 		  })
@@ -39,11 +39,22 @@ export default {
 	
 	//METHOD PUT
 	put( extend = '', body, callback ){
-	   axios.put(`${baseURL}/${extend}`, body, { headers: headers() })
+	   axios.put(`${baseURL}/${extend}`, body, { headers: createHeaders() })
 	      .then(res => {
 	         if ( res.data.code === 200 ) callback(true)
 	      })
 	      .catch( err => {
+	         if ( err.response ) callback(false, err.response.data.response)
+	      })
+	},
+	
+	//METHOD DELETE
+	delete( extend = '', data, callback ){
+	   axios.delete(`${baseURL}/${extend}`, { data, headers: createHeaders() })
+	      .then(res => {
+	         if ( res.data.code === 200 ) callback(true)
+	      })
+	      .catch(err => {
 	         if ( err.response ) callback(false, err.response.data.response)
 	      })
 	}

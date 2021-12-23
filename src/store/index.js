@@ -4,6 +4,9 @@ import { darkModeKey } from '@/config.js'
 
 export default createStore({
   state: {
+     /* Response from server */
+     errorFromServer: null,
+     
     /* User */
     userName: null,
     userEmail: null,
