@@ -43,6 +43,20 @@ const updateFail = () => {
    colorNotif.value = 'warning'
 }
 
+const deleteSuccess = () => {
+   getCandidates()
+   showNotif.value = true
+   textNotif.value = 'Delete data success'
+   colorNotif.value = 'info'
+}
+
+const deleteFail = () => {
+   showNotif.value = true
+   textNotif.value = err.value
+   colorNotif.value = 'warning'
+}
+
+
 onMounted(() => {
    getCandidates()
 })
@@ -66,7 +80,9 @@ onMounted(() => {
     >
        <candidates-table
          v-on:update-success="updateSuccess()"
-         v-on:update-fail="updateFail()"
+         v-on:update-fail="updateFail"
+         v-on:delete-success="deleteSuccess()"
+         v-on:delete-fail="deleteFail()"
          checkable :fields="candidates" />
     </card-component>
   </main-section>

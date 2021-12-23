@@ -103,6 +103,27 @@ const update = () => {
       }
    })
 }
+
+//Delete handler
+const key = ref({
+   candidate_id: null
+})
+const btnDelete = data => {
+   //Trigger
+   isModalDangerActive.value = true
+   
+   //Fill key
+   key.value.candidate_id = data.candidate_id
+}
+const deleteCandidate = () => {
+   http.delete('master/remove-candidate', key.value, (status, err = '') => {
+      if (status) emit('delete-success')
+      else {
+         store.state.errorFromServer = err.sqlMessage
+         emit('delete-fail')
+      }
+   })
+}
 </script>
 
 <template>
@@ -158,6 +179,7 @@ const update = () => {
 
   <modal-box
     v-model="isModalDangerActive"
+    v-on:confirm="deleteCandidate()"
     large-title="Hapus data "
     button="danger"
     has-cancel
@@ -221,13 +243,13 @@ const update = () => {
               color="success"
               :icon="mdiAccountEdit"
               small
-              @click="[ btnUpdate(item), isModalActive = true ]"
+              @click="btnUpdate(item)"
             />
             <jb-button
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="btnDelete(item)"
             />
           </jb-buttons>
         </td>
