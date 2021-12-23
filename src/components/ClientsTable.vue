@@ -4,11 +4,13 @@ import { useStore } from 'vuex'
 import { mdiAccountEdit, mdiTrashCan, mdiEye, mdiBallot } from '@mdi/js'
 import ModalBox from '@/components/ModalBox.vue'
 import CheckboxCell from '@/components/CheckboxCell.vue'
+import Notification from '@/components/Notification.vue'
 import Level from '@/components/Level.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import Field from  '@/components/Field.vue'
 import Control from '@/components/Control.vue'
+import http from '@/helper/http.js'
 
 const props = defineProps({
   checkable: Boolean,
@@ -72,11 +74,11 @@ const genders = ['male', 'female']
 
 //Update DPT handler
 const updateForm = reactive({
-	name: '',
+	fullname: '',
 	username: '',
 	password: '',
 	gender: '',
-	job_name: jobs[0].id
+	job_id: jobs[0].id
 })
 
 //Fill data automatic
@@ -85,26 +87,37 @@ const btnUpdate = data => {
 	isModalActive.value = true
 
 	//Fill form
-	updateForm.name = data.fullname
+	updateForm.fullname = data.fullname
 	updateForm.username = data.username
 	updateForm.password = data.password
 	updateForm.gender = data.gender
 	updateForm.job_name = jobs.filter(j => j.label === data.job_name)[0].id
 }
 
+//Define emits
+const emits = defineEmits(['update-success', 'update-fail'])
+
+const update = () => {
+   //Post data to API
+	http.put('master/update-account', updateForm, (status, err = '') => {
+	   if ( status ) emits('update-success')
+	   else emits('update-fail')
+	})
+}
 </script>
 
 <template>
 
 <!-- Update Modal -->
   <modal-box
+   v-on:confirm="update()"
     v-model="isModalActive"
     title="Update Data Pemilih"
     has-cancel
   >
     <Field label="Nama">
       <Control
-        v-model="updateForm.name"
+        v-model="updateForm.fullname"
         placeholder="Ubah nama DPT"
         :icon="mdiAccountEdit" />
     </Field>
@@ -134,7 +147,7 @@ const btnUpdate = data => {
     
     <Field label="Job">
       <Control
-       v-model="updateForm.job_name"
+       v-model="updateForm.job_id"
        :options="jobs"
        :icon="mdiAccountEdit"/>
     </Field>
@@ -174,7 +187,7 @@ const btnUpdate = data => {
          <th>Job</th>
          <th>Status</th>
          <th>Timestamp</th>
-         <th>Last modified</th>
+         <th>Edited</th>
          <th>Actions</th>
       </tr>
     </thead>
@@ -199,7 +212,7 @@ const btnUpdate = data => {
           {{ item.job_name }}
         </td>
         <td data-label="Status">
-          {{ item.status_vote > 0 ? 'sudah memilih' : 'belum memilih'}}
+          {{ item.status_vote > 0 ? 'sudah' : 'belum'}}
         </td>
         <td data-label="Timestamp">
           <small
@@ -207,11 +220,11 @@ const btnUpdate = data => {
             :title="item.timestamp"
           >{{ new Date(item.time_stamp).toLocaleString('id') }}</small>
         </td>
-        <td data-label="Last Modified">
+        <td data-label="Edited">
           <small
             class="text-gray-500 dark:text-gray-400"
-            :title="item.lastModified"
-          >{{ new Date(item.lastModified).toLocaleString('id') }}</small>
+            :title="item.last_modified"
+          >{{ new Date(item.last_modified).toLocaleString('id') }}</small>
         </td>
         <td data-label="actions" class="actions-cell">
           <jb-buttons

@@ -25,8 +25,11 @@ const componentClass = computed(() => props.outline
 
 const isDismissed = ref(false)
 
+const emits = defineEmits(['close'])
+
 const dismiss = () => {
   isDismissed.value = true
+  emits('close')
 }
 
 const slots = useSlots()

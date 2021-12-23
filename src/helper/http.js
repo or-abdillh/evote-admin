@@ -44,7 +44,7 @@ export default {
 	         if ( res.data.code === 200 ) callback(true)
 	      })
 	      .catch( err => {
-	         if ( err.response ) callback(false, err)
+	         if ( err.response ) callback(false, err.response.data.response)
 	      })
 	}
 }
