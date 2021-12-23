@@ -41,7 +41,7 @@ export default {
 	put( extend = '', body, callback ){
 	   axios.put(`${baseURL}/${extend}`, body, { headers: createHeaders() })
 	      .then(res => {
-	         if ( res.data.code === 200 ) callback(true)
+	         if ( res.data.code === 200 ) callback(true, res.data)
 	      })
 	      .catch( err => {
 	         if ( err.response ) callback(false, err.response.data.response)

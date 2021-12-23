@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { mdiAccountGroup, mdiReload } from '@mdi/js'
+import { ref, onMounted, computed } from 'vue'
+import { mdiAccountGroup, mdiReload, mdiInformation } from '@mdi/js'
 import DataTables from '@/components/DataTables.vue'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
@@ -16,10 +16,35 @@ const titleStack = ref(['Admin', 'Pasangan Calon'])
 
 //Get data from API
 const candidates = ref([])
-onMounted(() => {
+const getCandidates = () => {
    http.get('master/candidates', (data, status) => {
       if (status) candidates.value = data.response
    })
+}
+
+//Get err 
+const err = computed(() => store.state.errorFromServer)
+
+//Notification handler
+const showNotif = ref(false)
+const textNotif = ref('')
+const colorNotif = ref('')
+
+const updateSuccess = () => {
+   getCandidates()
+   showNotif.value = true
+   textNotif.value = 'Update data success'
+   colorNotif.value = 'info'
+}
+
+const updateFail = () => {
+   showNotif.value = true
+   textNotif.value = err.value
+   colorNotif.value = 'warning'
+}
+
+onMounted(() => {
+   getCandidates()
 })
 
 </script>
@@ -28,11 +53,21 @@ onMounted(() => {
   <title-bar :title-stack="titleStack" />
   <hero-bar>Kandidat Calon Ketua dan Wakil Ketua Umum</hero-bar>
   <main-section>
+     <Notification 
+      v-on:close="showNotif = false"
+      v-if="showNotif"
+      :color="colorNotif"
+      :icon="mdiInformation">
+        {{ textNotif }}
+     </Notification>
   <card-component
       class="mb-6"
       has-table
     >
-       <candidates-table checkable :fields="candidates" />
+       <candidates-table
+         v-on:update-success="updateSuccess()"
+         v-on:update-fail="updateFail()"
+         checkable :fields="candidates" />
     </card-component>
   </main-section>
 </template>

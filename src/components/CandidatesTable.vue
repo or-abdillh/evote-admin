@@ -9,6 +9,7 @@ import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import Field from  '@/components/Field.vue'
 import Control from '@/components/Control.vue'
+import http from '@/helper/http.js'
 
 const props = defineProps({
   checkable: Boolean,
@@ -66,32 +67,49 @@ const checked = (isChecked, client) => {
 
 //Update Candidate handler
 const updateForm = reactive({
-	candidateNumber: 1,
-	chairmanName: 'Fulan bin Fulan',
-	chairmanImage: '/male.jpg',
-	viceChairmanName: 'Fulanah binti fulah',
-	viceChairmanImage: '/female.jpg'
+   candidate_id: null,
+	candidate_number: 1,
+	chairman_name: 'Fulan bin Fulan',
+	chairman_image: '/male.jpg',
+	vice_chairman_name: 'Fulanah binti fulah',
+	vice_chairman_image: '/female.jpg'
 })
 
 //Fill updateForm with current data
+//Update handler
 const btnUpdate = data => {
 	//trigger modal
 	isModalActive.value = true
 
 	//Fill form
-	updateForm.candidateNumber = data.candidate_number
-	updateForm.chairmanName = data.chairman_name
-	updateForm.chairmanImage = data.chairman_image
-	updateForm.viceChairmanName = data.vice_chairman_name
-	updateForm.viceChairmanImage = data.vice_chairman_image
+	updateForm.candidate_id = data.candidate_id
+	updateForm.candidate_number = data.candidate_number
+	updateForm.chairman_name = data.chairman_name
+	updateForm.chairman_image = data.chairman_image
+	updateForm.vice_chairman_name = data.vice_chairman_name
+	updateForm.vice_chairman_image = data.vice_chairman_image
 }
 
+//Event
+const emit = defineEmits(['update-success', 'delete-success', 'update-fail', 'delete-fail'])
+
+//Connect to API
+const update = () => {
+   http.put('master/update-candidate', updateForm, (status, data) => {
+      if (status) emit('update-success')
+      else {
+         store.state.errorFromServer = data.sqlMessage
+         emit('update-fail')
+      }
+   })
+}
 </script>
 
 <template>
 
 <!-- Update Modal -->
   <modal-box
+    v-on:confirm="update()"
     v-model="isModalActive"
     title="Update Data Kandidat"
     has-cancel
@@ -99,14 +117,14 @@ const btnUpdate = data => {
     <Field label="Nomor Pasangan Calon">
       <Control
         type="number"
-        v-model="updateForm.candidateNumber"
+        v-model="updateForm.candidate_number"
         placeholder="Ubah nomor urut paslon"
         :icon="mdiAccountEdit" />
     </Field>
 
     <Field label="Calon Ketua Umum">
       <Control
-       v-model="updateForm.chairmanName"
+       v-model="updateForm.chairman_name"
        placeholder="Ubah nama calon ketua umum"
        :icon="mdiAccountEdit" 
        class="mb-6"/>
@@ -114,7 +132,7 @@ const btnUpdate = data => {
 
     <Field label="Foto Calon Ketua Umum">
       <Control 
-        v-model="updateForm.chairmanImage"
+        v-model="updateForm.chairman_image"
         placeholder="Ubah link upload foto"
         :icon="mdiAccountEdit"
         class="mb-6"/>
@@ -122,7 +140,7 @@ const btnUpdate = data => {
     
     <Field label="Calon Wakil Keta Umum">
       <Control 
-        v-model="updateForm.viceChairmanName"
+        v-model="updateForm.vice_chairman_name"
         placeholder="Ubah nama calon wakil ketua umum"
         :icon="mdiAccountEdit"
         class="mb-6"/>
@@ -130,7 +148,7 @@ const btnUpdate = data => {
     
     <Field label="Foto Wakil Ketua Umum">
       <Control 
-        v-model="updateForm.viceChairmanImage"
+        v-model="updateForm.vice_chairman_image"
         placeholder="Ubah link upload foto"
         :icon="mdiAccountEdit"
         class="mb-6"/>
