@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock } from '@mdi/js'
+import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock, mdiInformation } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -67,10 +67,10 @@ const btnUpdate = () => {
 <template>
   <title-bar :title-stack="titleStack" />
   <hero-bar>Kelola Kegiatan Evoting Anda</hero-bar>
-  <Notification v-if="showNotif">
-     {{ textNotif }}
-  </Notification>
   <main-section>
+     <Notification v-on:close="showNotif = false" :icon="mdiInformation" color="info" v-if="showNotif">
+        {{ textNotif }}
+     </Notification>
      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
         <CardWidget
         color="text-green-500"
