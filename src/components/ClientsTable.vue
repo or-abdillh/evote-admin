@@ -67,12 +67,16 @@ const checked = (isChecked, client) => {
 //Jobs
 const jobs = [{ id: 1, label: 'Dosen' }, { id: 2, label: 'Mahasiswa' }]
 
+//Gender
+const genders = ['male', 'female']
+
 //Update DPT handler
 const updateForm = reactive({
 	name: '',
 	username: '',
 	password: '',
-	job: jobs[0]
+	gender: '',
+	job_name: jobs[0].id
 })
 
 //Fill data automatic
@@ -84,9 +88,8 @@ const btnUpdate = data => {
 	updateForm.name = data.fullname
 	updateForm.username = data.username
 	updateForm.password = data.password
-	updateForm.job = jobs.filter(j => j.label === data.job_name)[0].id
-	//alert(JSON.stringify())
-	//alert(JSON.stringify(jobs.filter(j => j.label === data.job_name)[0]))
+	updateForm.gender = data.gender
+	updateForm.job_name = jobs.filter(j => j.label === data.job_name)[0].id
 }
 
 </script>
@@ -122,9 +125,16 @@ const btnUpdate = data => {
         class="mb-6"/>
     </Field>
 
+    <Field label="Gender">
+      <Control
+       v-model="updateForm.gender"
+       :options="genders"
+       :icon="mdiAccountEdit"/>
+    </Field>
+    
     <Field label="Job">
       <Control
-       v-model="updateForm.job"
+       v-model="updateForm.job_name"
        :options="jobs"
        :icon="mdiAccountEdit"/>
     </Field>
@@ -160,10 +170,11 @@ const btnUpdate = data => {
          <th>Name</th>
          <th>Username</th>
          <th>Password</th>
+         <th>Gender</th>
          <th>Job</th>
          <th>Status</th>
          <th>Timestamp</th>
-         <th>Edited</th>
+         <th>Last modified</th>
          <th>Actions</th>
       </tr>
     </thead>
@@ -181,11 +192,14 @@ const btnUpdate = data => {
         <td data-label="Password">
           {{ item.password }}
         </td>
+        <td data-label="Gender">
+          {{ item.gender }}
+        </td>
         <td data-label="Job">
           {{ item.job_name }}
         </td>
         <td data-label="Status">
-          {{ item.status_vote > 0 ? 'sudah' : 'belum'}}
+          {{ item.status_vote > 0 ? 'sudah memilih' : 'belum memilih'}}
         </td>
         <td data-label="Timestamp">
           <small
@@ -193,7 +207,7 @@ const btnUpdate = data => {
             :title="item.timestamp"
           >{{ new Date(item.time_stamp).toLocaleString('id') }}</small>
         </td>
-        <td data-label="Edited">
+        <td data-label="Last Modified">
           <small
             class="text-gray-500 dark:text-gray-400"
             :title="item.lastModified"
