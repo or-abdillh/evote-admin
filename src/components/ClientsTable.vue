@@ -210,7 +210,7 @@ const deleteAccount = () => {
          <th>Password</th>
          <th>Gender</th>
          <th>Job</th>
-         <th>Status</th>
+         <th>Status vote</th>
          <th>Timestamp</th>
          <th>Edited</th>
          <th>Actions</th>
@@ -236,14 +236,14 @@ const deleteAccount = () => {
         <td data-label="Job">
           {{ item.job_name }}
         </td>
-        <td data-label="Status">
+        <td data-label="Status vote">
           {{ item.status_vote > 0 ? 'sudah' : 'belum'}}
         </td>
         <td data-label="Timestamp">
           <small
             class="text-gray-500 dark:text-gray-400"
-            :title="item.timestamp"
-          >{{ new Date(item.time_stamp).toLocaleString('id') }}</small>
+            :title="item.time_stamp"
+          >{{ item.time_stamp === 0 ? 'Tidak ada data' : new Date(item.time_stamp).toLocaleString('id') }}</small>
         </td>
         <td data-label="Edited">
           <small
