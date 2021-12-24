@@ -3,7 +3,7 @@
 
 📌 App for admin
 
-<img src="/banner.png" width="100%" alt="" />
+<img src="https://dl.dropbox.com/s/r59lifb6zfvllis/banner.png?dl=2" width="100%" alt="" />
 
 ### About
 A website-based application built based on the admin-one-vue-tailwind template which already uses the Vue js and tailwindcss technology stack. 
@@ -15,7 +15,7 @@ The main function of this application is to carry out supervision during activit
 ### Responsive Test
  
 Test via [Am I Responsive](http://ami.responsivedesign.is/)
-<img src="/banner-2.jpg" width="100%" />
+<img src="https://dl.dropbox.com/s/72buybvuebrsi42/banner-2.jpg?dl=2" width="100%" />
 
 ### Languages and Tools
 - Vue JS 3
