@@ -110,7 +110,7 @@ const logout = () => {
 
          <nav-bar-item>
              <div>
-               <span>{{ userName }}</span>
+               <span>Master</span>
              </div>
          </nav-bar-item>
          
