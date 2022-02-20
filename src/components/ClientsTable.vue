@@ -78,7 +78,8 @@ const updateForm = reactive({
 	username: '',
 	password: '',
 	gender: '',
-	job_id: jobs[0].id
+	job_id: jobs[0].id,
+	key: ''
 })
 
 //Define emits
@@ -92,6 +93,7 @@ const btnUpdate = data => {
 	//Fill form
 	updateForm.fullname = data.fullname
 	updateForm.username = data.username
+	updateForm.key = data.username
 	updateForm.password = data.password
 	updateForm.gender = data.gender
 	updateForm.job_name = jobs.filter(j => j.label === data.job_name)[0].id
@@ -99,7 +101,7 @@ const btnUpdate = data => {
 
 const update = () => {
    //Post data to API
-	http.put('master/update-account', updateForm, (status, err = '') => {
+	http.put('admin/accounts', updateForm, (status, err = '') => {
 	   if ( status ) emits('update-success')
 	   else {
 	      store.state.errorFromServer = err
@@ -120,7 +122,7 @@ const btnDelete = data => {
 }
 
 const deleteAccount = () => {
-   http.delete('master/remove-account', key.value, (status, err = '') => {
+   http.delete('admin/accounts', key.value, (status, err = '') => {
       if ( status ) emits('delete-success')
       else {
          store.state.errorFromServer = err

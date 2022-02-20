@@ -31,7 +31,7 @@ const colorNotif = ref()
 
 //Insert handler
 const submit = () => {
-   http.post('master/insert-candidate', form, (data, status) => {
+   http.post('admin/candidates', form, (data, status) => {
       if (status) {
          showNotif.value = true
          textNotif.value = data.response

@@ -20,8 +20,8 @@ const store = useStore()
 const users = ref([])
 
 const getAccounts = () => {
-   http.get('master/accounts', (data, status) => {
-      if (status) users.value = data.response
+   http.get('admin/accounts', (data, status) => {
+      if (status) users.value = data.response.accounts
    })
 }
 //Get errorFromServer

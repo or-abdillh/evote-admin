@@ -21,9 +21,9 @@ const eventFinishAt = ref('')
 const passcode = ref('passcode')
 
 const getEvent = () => {
-   http.get('master/event', (data, status) => {
+   http.get('event', (data, status) => {
       if (status) {
-         const res = data.response[0]
+         const res = data.response.event
          eventStartAt.value = new Date(res.event_start_at).toLocaleString('id')
          eventFinishAt.value = new Date(res.event_finish_at).toLocaleString('id')
          passcode.value = res.passcode
@@ -53,7 +53,7 @@ const btnUpdate = () => {
    form.event_start_at = new Date(form.event_start_at).getTime()
    form.event_finish_at = new Date(form.event_finish_at).getTime()
    
-   http.put('master/update-event', form,  (status, err = '') => {
+   http.put('admin/event', form,  (status, err = '') => {
       if ( status ) {
          textNotif.value = 'Action success'
          getEvent()

@@ -21,7 +21,7 @@ const router = useRouter()
 const isLoginFail = ref(false)
 
 const submit = () => {
-  http.post('master/login', form, (data, status) => {
+  http.post('admin/login', form, (data, status) => {
      if (status) {
         localStorage.setItem('$evote-token', data.response.token)
         setTimeout(() => router.push({ name: 'home' }), 350)

@@ -20,7 +20,7 @@ if ((localStorageDarkModeValue === null && window.matchMedia('(prefers-color-sch
 }
 
 /* Default title tag */
-const defaultDocumentTitle = 'Admin One Vue 3 Tailwind'
+const defaultDocumentTitle = 'Admin Electronic Vote System HIMA TI Polihasnur'
 
 //Navigation Guard
 router.beforeEach((to, next) => {

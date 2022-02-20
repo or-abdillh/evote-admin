@@ -29,7 +29,7 @@ const form = reactive({
 })
 
 const submit = () => {
-   http.post('master/insert-account', form, (data, status) => {
+   http.post('admin/accounts', form, (data, status) => {
       if (status) {
          showNotif.value = true
          textNotif.value = data.response

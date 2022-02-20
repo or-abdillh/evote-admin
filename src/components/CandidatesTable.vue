@@ -95,7 +95,7 @@ const emit = defineEmits(['update-success', 'delete-success', 'update-fail', 'de
 
 //Connect to API
 const update = () => {
-   http.put('master/update-candidate', updateForm, (status, data) => {
+   http.put('admin/candidates', updateForm, (status, data) => {
       if (status) emit('update-success')
       else {
          store.state.errorFromServer = data.sqlMessage
@@ -116,7 +116,7 @@ const btnDelete = data => {
    key.value.candidate_id = data.candidate_id
 }
 const deleteCandidate = () => {
-   http.delete('master/remove-candidate', key.value, (status, err = '') => {
+   http.delete('admin/candidates', key.value, (status, err = '') => {
       if (status) emit('delete-success')
       else {
          store.state.errorFromServer = err.sqlMessage

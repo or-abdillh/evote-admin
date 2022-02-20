@@ -23,7 +23,6 @@ import NavBarItemLabel from '@/components/NavBarItemLabel.vue'
 import NavBarMenu from '@/components/NavBarMenu.vue'
 import NavBarMenuDivider from '@/components/NavBarMenuDivider.vue'
 import Icon from '@/components/Icon.vue'
-import NavBarSearch from '@/components/NavBarSearch.vue'
 
 const store = useStore()
 const router = useRouter()
@@ -55,7 +54,8 @@ const menuOpenLg = () => {
 }
 
 const logout = () => {
-   router.push({ name: 'login' })
+	localStorage.removeItem('$evote-token')
+	router.push({ name: 'login' })
 }
 </script>
 
@@ -84,9 +84,6 @@ const logout = () => {
           :path="mdiMenu"
           size="24"
         />
-      </nav-bar-item>
-      <nav-bar-item>
-        <nav-bar-search />
       </nav-bar-item>
     </div>
     <div class="flex-none items-stretch flex h-14 lg:hidden">

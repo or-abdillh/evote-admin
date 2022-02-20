@@ -17,8 +17,8 @@ const titleStack = ref(['Admin', 'Pasangan Calon'])
 //Get data from API
 const candidates = ref([])
 const getCandidates = () => {
-   http.get('master/candidates', (data, status) => {
-      if (status) candidates.value = data.response
+   http.get('candidates', (data, status) => {
+      if (status) candidates.value = data.response.candidates
    })
 }
 

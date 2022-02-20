@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const baseURL = 'https://dry-falls-66840.herokuapp.com'
+const baseURL = 'http://localhost:8080'
 
 const createHeaders = () => {
    return {
       'content-type': 'application/json',
-		'token': localStorage.getItem('$evote-token') || null
+			'authorization': localStorage.getItem('$evote-token') || null
    }
 }
 
@@ -55,7 +55,7 @@ export default {
 	         if ( res.data.code === 200 ) callback(true)
 	      })
 	      .catch(err => {
-	         if ( err.response ) callback(false, err.response.data.response)
+	         if ( err.response ) callback(false, `${err.response.data.mesasge} - ${err.response.data.response}`)
 	      })
 	}
 }

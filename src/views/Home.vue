@@ -66,9 +66,9 @@ const lastUpdated = ref('')
 const fillLastUpdated = () => lastUpdated.value = `Update terakhir pada ${new Date().toLocaleString('id')}`
 
 const getDashboard = () => {
-   http.get('master/dashboard', (data, status) => {
+   http.get('admin/event', (data, status) => {
       if (status) {
-         const res = data.response
+         const res = data.response.dashboard
          //createTrend
          trends.participations = createTrend(dashboard.participations, res.participations)
          trends.incomingVote = createTrend(dashboard.incomingVote, res.incomingVote)
@@ -84,8 +84,8 @@ const listBg = ['bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-red-500']
 const quickCount = ref([])
 
 const fillQuickCount = () => {
-   http.get('master/quick-count', (data, status) => {
-      if (status) quickCount.value = data.response
+   http.get('admin/event/quick-count', (data, status) => {
+      if (status) quickCount.value = data.response.quickCount
    })
 }
 
@@ -111,9 +111,9 @@ const chooseState = (start, finish) => {
 
 //API
 const getEvent = () => {
-   http.get('master/event', (data, status) => {
+   http.get('event', (data, status) => {
       if (status) {
-         const res = data.response[0]
+         const res = data.response.event
          start.value = res.event_start_at
          finish.value = res.event_finish_at
          chooseState(start.value, finish.value)
