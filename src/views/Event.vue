@@ -95,19 +95,14 @@ const btnUpdate = async () => {
           <Control
             v-model="form.start"
             class="mb-6"
-            type="datetime-local"
-            value="2021-12-25 T09:00"
-            min="2021-12-01 T12:00"
-            max="2022-12-01 T12:00"
+            type="datetime"
             placeholder="Tanggal dan waktu acara dimulai" />
       </Field>
       <Field>
          <Control
             v-model="form.end"
-            type="datetime-local"
+            type="datetime"
             value="2021-12-25 T09:00"
-            min="2021-12-01 T12:00"
-            max="2022-12-01 T12:00"
             placeholder="Tanggal dan waktu acara berakhir"/>
       </Field>
       
