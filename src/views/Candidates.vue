@@ -1,25 +1,29 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { mdiAccountGroup, mdiReload, mdiInformation } from '@mdi/js'
-import DataTables from '@/components/DataTables.vue'
+import { mdiInformation } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import CandidatesTable from '@/components/CandidatesTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
-import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
-import TitleSubBar from '@/components/TitleSubBar.vue'
-import http from '@/helper/http.js'
+import ajax from '@/helper/ajax'
+import store from '@/store'
 
 const titleStack = ref(['Admin', 'Pasangan Calon'])
 
 //Get data from API
 const candidates = ref([])
-const getCandidates = () => {
-   http.get('candidates', (data, status) => {
-      if (status) candidates.value = data.response.candidates
-   })
+const getCandidates = async () => {
+   try {
+      const res = await ajax.get('/admin/candidate')
+      candidates.value = res.data.results
+      // console.log(candidates.value)
+   } catch(err) {
+      if (err?.response) {
+         store.state.errorFromServer = err?.response?.data?.results
+      }
+   }
 }
 
 //Get err 

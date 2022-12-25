@@ -54,7 +54,7 @@ const menuOpenLg = () => {
 }
 
 const logout = () => {
-	localStorage.removeItem('$evote-token')
+	localStorage.setItem('evote-himati:token', 'null')
 	router.push({ name: 'login' })
 }
 </script>

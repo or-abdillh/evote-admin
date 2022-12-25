@@ -13,37 +13,37 @@ const routes = [
     component: Home
   },
   {
-  	path: '/DPT',
-  	name: 'DPT',
-  	component: () => import('@/views/DPT.vue')
+    path: '/DPT',
+    name: 'DPT',
+    component: () => import('@/views/DPT.vue')
   },
   {
-     path: '/newUser',
-     name: 'tambahPemilih',
-     component: () => import('@/views/NewUser.vue')
+    path: '/newUser',
+    name: 'tambahPemilih',
+    component: () => import('@/views/NewUser.vue')
   },
   {
-     path: '/candidates',
-     name: 'kandidat',
-     component: () => import('@/views/Candidates.vue')
+    path: '/candidates',
+    name: 'kandidat',
+    component: () => import('@/views/Candidates.vue')
   },
   {
-  	path: '/newCandidate',
-  	name: 'tambahPaslon',
-  	component: () => import('@/views/NewCandidate.vue')
+    path: '/newCandidate',
+    name: 'tambahPaslon',
+    component: () => import('@/views/NewCandidate.vue')
   },
   {
-     path: '/event',
-     name: 'kelolaAcara',
-     component: () => import('@/views/Event.vue')
+    path: '/event',
+    name: 'kelolaAcara',
+    component: () => import('@/views/Event.vue')
   },
   {
-     meta: {
-        fullScreen: true
-     },
-     path: '/login',
-     name: 'login',
-     component: () => import('@/views/Login.vue')
+    meta: {
+      fullScreen: true
+    },
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/Login.vue')
   }
 ]
 

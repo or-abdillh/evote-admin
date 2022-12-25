@@ -3,14 +3,12 @@ import { computed, ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { mdiAccountEdit, mdiTrashCan, mdiEye, mdiBallot } from '@mdi/js'
 import ModalBox from '@/components/ModalBox.vue'
-import CheckboxCell from '@/components/CheckboxCell.vue'
-import Notification from '@/components/Notification.vue'
 import Level from '@/components/Level.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import Field from  '@/components/Field.vue'
 import Control from '@/components/Control.vue'
-import http from '@/helper/http.js'
+import ajax from '@/helper/ajax'
 
 const props = defineProps({
   checkable: Boolean,
@@ -25,7 +23,7 @@ const isModalActive = ref(false)
 
 const isModalDangerActive = ref(false)
 
-const perPage = ref(10)
+const perPage = ref(20)
 
 const currentPage = ref(0)
 
@@ -78,8 +76,8 @@ const updateForm = reactive({
 	username: '',
 	password: '',
 	gender: '',
-	job_id: jobs[0].id,
-	key: ''
+	job: '',
+	id: ''
 })
 
 //Define emits
@@ -93,42 +91,40 @@ const btnUpdate = data => {
 	//Fill form
 	updateForm.fullname = data.fullname
 	updateForm.username = data.username
-	updateForm.key = data.username
-	updateForm.password = data.password
+	updateForm.id = data.id
+	// updateForm.password = data.password
 	updateForm.gender = data.gender
-	updateForm.job_name = jobs.filter(j => j.label === data.job_name)[0].id
+	updateForm.job = data.job
 }
 
-const update = () => {
+const update = async () => {
    //Post data to API
-	http.put('admin/accounts', updateForm, (status, err = '') => {
-	   if ( status ) emits('update-success')
-	   else {
-	      store.state.errorFromServer = err
-	      emits('update-fail')
-	   }
-	})
+  try {
+    await ajax.put(`/admin/user/${ updateForm.id }`, updateForm)
+    emits('update-success')
+  } catch(err) {
+    store.state.errorFromServer = err
+    emits('update-fail')
+  }
 }
 
 //Delete handler
-const key = ref({
-   username: ''
-})
+const id = ref(null)
+
 const btnDelete = data => {
-   //Trigger modal
-   isModalDangerActive.value = true
-   
-   key.value.username = data.username
+  //Trigger modal
+  isModalDangerActive.value = true
+  id.value = data.id
 }
 
-const deleteAccount = () => {
-   http.delete('admin/accounts', key.value, (status, err = '') => {
-      if ( status ) emits('delete-success')
-      else {
-         store.state.errorFromServer = err
-         emits('delete-fail')
-      }
-   })
+const deleteAccount = async () => {
+  try {
+    await ajax.delete(`/admin/user/${ id.value }`)
+    emits('delete-success')
+  } catch(err) {
+    store.state.errorFromServer = err
+    emits('delete-fail')
+  }
 }
 </script>
 
@@ -173,9 +169,9 @@ const deleteAccount = () => {
     
     <Field label="Job">
       <Control
-       v-model="updateForm.job_id"
-       :options="jobs"
-       :icon="mdiAccountEdit"/>
+        v-model="updateForm.job"
+        placeholder="Ubah pekerjaan DPT"
+        :icon="mdiAccountEdit" />
     </Field>
   </modal-box>
 
@@ -207,15 +203,14 @@ const deleteAccount = () => {
   <table>
     <thead>
       <tr>
-         <th>Name</th>
-         <th>Username</th>
-         <th>Password</th>
-         <th>Gender</th>
-         <th>Job</th>
-         <th>Status vote</th>
-         <th>Timestamp</th>
-         <th>Edited</th>
-         <th>Actions</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Gender</th>
+        <th>Job</th>
+        <th>Status vote</th>
+        <th>Timestamp</th>
+        <th>Edited</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -229,29 +224,26 @@ const deleteAccount = () => {
         <td data-label="Username">
           {{ item.username }}
         </td>
-        <td data-label="Password">
-          {{ item.password }}
-        </td>
         <td data-label="Gender">
           {{ item.gender }}
         </td>
         <td data-label="Job">
-          {{ item.job_name }}
+          {{ item.job }}
         </td>
         <td data-label="Status vote">
-          {{ item.status_vote > 0 ? 'sudah' : 'belum'}}
+          {{ item.status_vote > 0 ? 'sudah vote' : 'belum vote'}}
         </td>
-        <td data-label="Timestamp">
+        <td data-label="Timestamp Vote">
           <small
             class="text-gray-500 dark:text-gray-400"
-            :title="item.time_stamp"
-          >{{ item.time_stamp === 0 ? 'Tidak ada data' : new Date(item.time_stamp).toLocaleString('id') }}</small>
+            :title="item.timestamp"
+          >{{ item.timestamp === null ? 'Tidak ada data tersimpan' : new Date(item.timestamp).toLocaleString('id') }}</small>
         </td>
         <td data-label="Edited">
           <small
             class="text-gray-500 dark:text-gray-400"
-            :title="item.last_modified"
-          >{{ new Date(item.last_modified).toLocaleString('id') }}</small>
+            :title="item.updatedAt"
+          >{{ new Date(item.updatedAt).toLocaleString('id') }}</small>
         </td>
         <td data-label="actions" class="actions-cell">
           <jb-buttons

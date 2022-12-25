@@ -1,46 +1,48 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
-import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiClock, mdiInformation } from '@mdi/js'
+import { ref, reactive, onMounted } from 'vue'
+import { mdiContentSaveMoveOutline, mdiInformation } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
-import TitleSubBar from '@/components/TitleSubBar.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import CardWidget from '@/components/CardWidget.vue'
 import http from '@/helper/http.js'
+import ajax from '@/helper/ajax'
 
 const titleStack = ref(['Admin', 'Kelola Acara'])
+
+//Form handler
+const form = reactive({
+	start: '',
+	end: '',
+	title: '',
+	passcode: ''
+})
+
 //Get API Handler
 const eventStartAt = ref('')
 const eventFinishAt = ref('')
 const passcode = ref('passcode')
 
-const getEvent = () => {
-   http.get('event', (data, status) => {
-      if (status) {
-         const res = data.response.event
-         eventStartAt.value = new Date(res.event_start_at).toLocaleString('id')
-         eventFinishAt.value = new Date(res.event_finish_at).toLocaleString('id')
-         passcode.value = res.passcode
-      }
-   })
+const getEvent = async () => {
+   try {
+      let res = await ajax.get('/admin/event')
+      res = res?.data?.results
+      eventStartAt.value = new Date(res.start).toLocaleString('id')
+      eventFinishAt.value = new Date(res.end).toLocaleString('id')
+      passcode.value = res.passcode
+   } catch(err) {
+      if (err?.response) alert(err.response.data.results)
+   }
 }
 
 onMounted(() => {
    getEvent()
-})
-
-//Form handler
-const form = reactive({
-	event_start_at: '',
-	event_finish_at: '',
-	event_title: '',
-	passcode: ''
 })
 
 //Notification handler
@@ -48,19 +50,17 @@ const showNotif = ref(false)
 const textNotif = ref('')
 
 //Update
-const btnUpdate = () => {
-   //Convert to unix time
-   form.event_start_at = new Date(form.event_start_at).getTime()
-   form.event_finish_at = new Date(form.event_finish_at).getTime()
-   
-   http.put('admin/event', form,  (status, err = '') => {
-      if ( status ) {
+const btnUpdate = async () => {
+   try {
+      const res = await ajax.put('/admin/event', form)
+      if (res?.data?.status) {
          textNotif.value = 'Action success'
          getEvent()
-      }
-      else textNotif.value = 'Action fail : ' + err
-      showNotif.value = true
-   })
+      } 
+   } catch(err) {
+      if (err?.response) textNotif.value = 'Action fail : ' + err.response?.data?.results
+   }
+   showNotif.value = true
 }
 </script>
 
@@ -93,7 +93,7 @@ const btnUpdate = () => {
     >
        <Field label="Atur waktu dan tanggal">
           <Control
-            v-model="form.event_start_at"
+            v-model="form.start"
             class="mb-6"
             type="datetime-local"
             value="2021-12-25 T09:00"
@@ -103,7 +103,7 @@ const btnUpdate = () => {
       </Field>
       <Field>
          <Control
-            v-model="form.event_finish_at"
+            v-model="form.end"
             type="datetime-local"
             value="2021-12-25 T09:00"
             min="2021-12-01 T12:00"
@@ -113,7 +113,7 @@ const btnUpdate = () => {
       
       <Field label="Atur tema kegiatan anda">
          <Control
-            v-model="form.event_title"
+            v-model="form.title"
             type="textarea"
             placeholder="Tema kegiatan akan muncul pada aplikasi evote pemilih"/>
       </Field>

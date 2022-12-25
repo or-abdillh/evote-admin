@@ -1,33 +1,25 @@
 <script setup>
+import Pusher from 'pusher-js'
 import { computed, ref, reactive, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import ajax from '@/helper/ajax.js'
 import {
-  mdiAccountGroup,
-  mdiAccountAlert,
-  mdiAccountMultiple,
-  mdiCartOutline,
-  mdiChartTimelineVariant,
-  mdiFinance,
-  mdiMonitorCellphone,
-  mdiReload,
-  mdiGithub,
-  mdiChartPie,
-  mdiVote,
-  mdiClock
+   mdiAccountGroup,
+   mdiAccountAlert,
+   mdiAccountMultiple,
+   mdiChartTimelineVariant,
+   mdiReload,
+   mdiChartPie,
+   mdiVote,
+   mdiClock
 } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
 import CardWidget from '@/components/CardWidget.vue'
 import CardComponent from '@/components/CardComponent.vue'
-import ClientsTable from '@/components/ClientsTable.vue'
-import Notification from '@/components/Notification.vue'
-import JbButton from '@/components/JbButton.vue'
-import CardTransactionBar from '@/components/CardTransactionBar.vue'
-import CardClientBar from '@/components/CardClientBar.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
-import http from '@/helper/http.js'
 import countdown from '@/helper/countdown.js'
 
 const titleStack = ref(['Admin', 'Dashboard'])
@@ -57,36 +49,36 @@ const createTrend = (before, after) => before < 1 ? "0%" : ((after - before) / b
 const fillDashboard = res => {
    dashboard.participants = res.participants
    dashboard.participations = res.participations
-   dashboard.incomingVote = res.incomingVote
-   dashboard.haventVoted = res.haventVoted
+   dashboard.incomingVote = res.userHasVoted
+   dashboard.haventVoted = res.participants - res.userHasVoted
    dashboard.candidates = res.candidates
 }
 
 const lastUpdated = ref('')
 const fillLastUpdated = () => lastUpdated.value = `Update terakhir pada ${new Date().toLocaleString('id')}`
 
-const getDashboard = () => {
-   http.get('admin/event', (data, status) => {
-      if (status) {
-         const res = data.response.dashboard
-         //createTrend
-         trends.participations = createTrend(dashboard.participations, res.participations)
-         trends.incomingVote = createTrend(dashboard.incomingVote, res.incomingVote)
-         trends.haventVoted = createTrend(dashboard.haventVoted, res.haventVoted)
-         fillDashboard(res)
-         fillLastUpdated()
-      }
-   })
+const getDashboard = async () => {
+   try {
+      let res = await ajax.get('admin/dashboard')
+      res = res?.data?.results
+      //createTrend
+      trends.participations = createTrend(dashboard.participations, res.participants)
+      trends.incomingVote = createTrend(dashboard.incomingVote, res.userHasVoted)
+      trends.haventVoted = createTrend(dashboard.haventVoted, res.participants - res.userHasVoted)
+      fillDashboard(res)
+      fillLastUpdated()
+   } catch(err) { console.log(err) }
 }
 
 //Get data quick count from API
 const listBg = ['bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-red-500']
 const quickCount = ref([])
 
-const fillQuickCount = () => {
-   http.get('admin/event/quick-count', (data, status) => {
-      if (status) quickCount.value = data.response.quickCount
-   })
+const fillQuickCount = async () => {
+   try {
+      const res = await ajax.get('/admin/quick-count')
+      quickCount.value = res?.data?.results
+   } catch(err) { console.log(err) }
 }
 
 //Countdown handler
@@ -110,15 +102,17 @@ const chooseState = (start, finish) => {
 }
 
 //API
-const getEvent = () => {
-   http.get('event', (data, status) => {
-      if (status) {
-         const res = data.response.event
-         start.value = res.event_start_at
-         finish.value = res.event_finish_at
-         chooseState(start.value, finish.value)
-      }
-   })
+const getEvent = async () => {
+   try {
+      let res = await ajax.get('/admin/event')
+      res = res?.data?.results
+
+      start.value = new Date(res.start).getTime()
+      finish.value = new Date(res.end).getTime()
+      chooseState(start.value, finish.value)
+   } catch(err) {
+      if (err?.response) console.log(err.response)
+   }
 }
 
 //Reload manual
@@ -135,11 +129,17 @@ onMounted(() => {
    fillQuickCount()
 })
 
-//Request every 1 minutes
-setInterval(() => {
+// Pusher listener
+const pusher = new Pusher( import.meta.env.VITE_PUSHER_KEY, {
+   cluster: 'ap1'
+})
+
+const channel = pusher.subscribe( import.meta.env.VITE_PUSHER_CHANNEL )
+
+channel.bind('user-has-voted', data => {
    getDashboard()
    fillQuickCount()
-}, 60000)
+})
 
 </script>
 

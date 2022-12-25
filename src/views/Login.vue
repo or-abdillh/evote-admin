@@ -1,6 +1,8 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import http from '@/helper/http.js'
+import ajax from '@/helper/ajax'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import FullScreenSection from '@/components/FullScreenSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -10,7 +12,6 @@ import Control from '@/components/Control.vue'
 import Divider from '@/components/Divider.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
-import http from '@/helper/http.js'
 
 const form = reactive({
   username: '',
@@ -20,14 +21,30 @@ const form = reactive({
 const router = useRouter()
 const isLoginFail = ref(false)
 
-const submit = () => {
-  http.post('admin/login', form, (data, status) => {
-     if (status) {
-        localStorage.setItem('$evote-token', data.response.token)
-        setTimeout(() => router.push({ name: 'home' }), 350)
-     }
-     else isLoginFail.value = true
-  })
+const submit = async () => {
+
+  // http.post('login', form, (data, status) => {
+  //   console.log(data.role)
+  //   if (status) {
+  //       localStorage.setItem('$evote-token', data.response.token)
+  //       setTimeout(() => router.push({ name: 'home' }), 350)
+  //   } else isLoginFail.value = true
+  // })
+  try {
+    const res = await ajax.post('/login', form)
+    // Just role master can access
+    if ( res?.data?.results?.role === 'master' ) {
+      // Save token from response to local
+      localStorage.setItem('evote-himati:token', res.data.results.token)
+      // Push to Home
+      setTimeout(() => {
+        router.push({ name: 'home' })
+      }, 1000)
+    }
+  } catch(err) {
+    console.error(err)
+    isLoginFail.value = true
+  }
 }
 </script>
 <template>

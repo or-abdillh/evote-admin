@@ -3,13 +3,14 @@ import { computed, ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { mdiAccountEdit, mdiTrashCan, mdiEye, mdiBallot } from '@mdi/js'
 import ModalBox from '@/components/ModalBox.vue'
-import CheckboxCell from '@/components/CheckboxCell.vue'
+import FilePicker from '@/components/FilePicker.vue'
 import Level from '@/components/Level.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import Field from  '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import http from '@/helper/http.js'
+import ajax from '@/helper/ajax'
 
 const props = defineProps({
   checkable: Boolean,
@@ -29,6 +30,8 @@ const perPage = ref(10)
 const currentPage = ref(0)
 
 const checkedRows = ref([])
+
+const form = ref(null)
 
 
 const itemsPaginated = computed(
@@ -64,16 +67,25 @@ const checked = (isChecked, client) => {
     checkedRows.value = remove(checkedRows.value, row => row.id === item.id)
   }
 }
+// Candidate id 
+const candidate_id = ref(null)
 
 //Update Candidate handler
 const updateForm = reactive({
-   candidate_id: null,
 	candidate_number: 1,
 	chairman_name: 'Fulan bin Fulan',
-	chairman_image: '/male.jpg',
+	chairman_image: {},
 	vice_chairman_name: 'Fulanah binti fulah',
-	vice_chairman_image: '/female.jpg'
+	vice_chairman_image: {}
 })
+
+const resetUpdateForm = () => {
+  updateForm.candidate_number = null
+  updateForm.chairman_name = 'null',
+  updateForm.vice_chairman_name = 'null'
+  updateForm.chairman_image = {}
+  updateForm.vice_chairman_image = {}
+}
 
 //Fill updateForm with current data
 //Update handler
@@ -82,99 +94,123 @@ const btnUpdate = data => {
 	isModalActive.value = true
 
 	//Fill form
-	updateForm.candidate_id = data.candidate_id
+	candidate_id.value = data.id
 	updateForm.candidate_number = data.candidate_number
 	updateForm.chairman_name = data.chairman_name
-	updateForm.chairman_image = data.chairman_image
 	updateForm.vice_chairman_name = data.vice_chairman_name
-	updateForm.vice_chairman_image = data.vice_chairman_image
 }
 
 //Event
 const emit = defineEmits(['update-success', 'delete-success', 'update-fail', 'delete-fail'])
 
-//Connect to API
-const update = () => {
-   http.put('admin/candidates', updateForm, (status, data) => {
-      if (status) emit('update-success')
-      else {
-         store.state.errorFromServer = data.sqlMessage
-         emit('update-fail')
+// Connect to API
+const update = async () => {
+  try {
+    const formData = new FormData()
+    
+    formData.append('candidate_number', updateForm.candidate_number)
+    formData.append('chairman_name', updateForm.chairman_name)
+    formData.append('vice_chairman_name', updateForm.vice_chairman_name)
+    formData.append('chairman_image', updateForm.chairman_image)
+    formData.append('vice_chairman_image', updateForm.vice_chairman_image)
+    
+    const res = await ajax.put(`/admin/candidate/${ candidate_id.value }`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
       }
-   })
+    })
+    // status.true
+    if ( res?.data?.status ) emit('update-success')
+
+    // Reset form
+    resetUpdateForm()
+  } catch(err) {
+    if (err?.response) {
+      store.state.errorFromServer = err?.response?.data?.results?.name
+      emit('update-fail')
+    }
+  }
 }
 
-//Delete handler
-const key = ref({
-   candidate_id: null
-})
+// fill image
+const fillImage = (target, file) => target.value = file
+
 const btnDelete = data => {
-   //Trigger
-   isModalDangerActive.value = true
-   
-   //Fill key
-   key.value.candidate_id = data.candidate_id
+  //Trigger
+  isModalDangerActive.value = true
+  //Fill key
+  candidate_id.value = data.id
 }
-const deleteCandidate = () => {
-   http.delete('admin/candidates', key.value, (status, err = '') => {
-      if (status) emit('delete-success')
-      else {
-         store.state.errorFromServer = err.sqlMessage
-         emit('delete-fail')
-      }
-   })
+
+const deleteCandidate = async () => {
+  try {
+    const res = await ajax.delete(`/admin/candidate/${ candidate_id.value }`)
+    if (res?.data?.status) emit('delete-success') 
+  } catch(err) {
+    if (err?.response) {
+      store.state.errorFromServer = err?.response?.data?.results
+      emit('delete-fail')
+    }
+  }
 }
+
 </script>
 
 <template>
 
 <!-- Update Modal -->
   <modal-box
-    v-on:confirm="update()"
-    v-model="isModalActive"
-    title="Update Data Kandidat"
-    has-cancel
+  v-on:confirm="update"
+  v-model="isModalActive"
+  title="Update Data Kandidat"
+  has-cancel
   >
-    <Field label="Nomor Pasangan Calon">
-      <Control
-        type="number"
-        v-model="updateForm.candidate_number"
-        placeholder="Ubah nomor urut paslon"
-        :icon="mdiAccountEdit" />
-    </Field>
-
-    <Field label="Calon Ketua Umum">
-      <Control
-       v-model="updateForm.chairman_name"
-       placeholder="Ubah nama calon ketua umum"
-       :icon="mdiAccountEdit" 
-       class="mb-6"/>
-    </Field>
-
-    <Field label="Foto Calon Ketua Umum">
-      <Control 
-        v-model="updateForm.chairman_image"
-        placeholder="Ubah link upload foto"
-        :icon="mdiAccountEdit"
-        class="mb-6"/>
-    </Field>
-    
-    <Field label="Calon Wakil Keta Umum">
-      <Control 
-        v-model="updateForm.vice_chairman_name"
-        placeholder="Ubah nama calon wakil ketua umum"
-        :icon="mdiAccountEdit"
-        class="mb-6"/>
-    </Field>
-    
-    <Field label="Foto Wakil Ketua Umum">
-      <Control 
-        v-model="updateForm.vice_chairman_image"
-        placeholder="Ubah link upload foto"
-        :icon="mdiAccountEdit"
-        class="mb-6"/>
-    </Field>
-    
+    <form ref="form">
+      <Field label="Nomor Pasangan Calon">
+        <Control
+          type="number"
+          name="candidate_number"
+          v-model="updateForm.candidate_number"
+          placeholder="Ubah nomor urut paslon"
+          :icon="mdiAccountEdit" />
+      </Field>
+  
+      <Field label="Calon Ketua Umum">
+        <Control
+          v-model="updateForm.chairman_name"
+          name="chairman_name"
+          placeholder="Ubah nama calon ketua umum"
+          :icon="mdiAccountEdit" 
+          class="mb-6"/>
+      </Field>
+  
+      <Field label="Foto Calon Ketua Umum">
+        <FilePicker 
+          :icon="mdiAccountEdit"
+          @update:modelValue="file => updateForm.chairman_image = file"
+          name="chairman_image"
+          class="mb-6">
+        </FilePicker>
+      </Field>
+      
+      <Field label="Calon Wakil Keta Umum">
+        <Control 
+          v-model="updateForm.vice_chairman_name"
+          name="vice_chairman_name"
+          placeholder="Ubah nama calon wakil ketua umum"
+          :icon="mdiAccountEdit"
+          class="mb-6"/>
+      </Field>
+      
+      <Field label="Foto Calon Wakil Ketua Umum">
+        <FilePicker 
+          :icon="mdiAccountEdit"
+          @update:model-value="file => updateForm.vice_chairman_image = file"
+          name="vice_chairman_image"
+          class="mb-6">
+        </FilePicker>
+      </Field>
+    </form>
   </modal-box>
 
   <modal-box

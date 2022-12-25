@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-const baseURL = 'http://localhost:8080'
+const baseURL = import.meta.env.VITE_BASE_URL
 
 const createHeaders = () => {
-   return {
-      'content-type': 'application/json',
-			'authorization': localStorage.getItem('$evote-token') || null
-   }
+	return {
+		'content-type': 'application/json',
+		'authorization': localStorage.getItem('$evote-token') || null
+	}
 }
 
 export default {
@@ -20,21 +20,19 @@ export default {
 			})	
 			.catch(err => {
 				if (err.response) {
-				  callback(err.response.data, false)
-			    }
+					callback(err.response.data, false)
+				}
 			})
 	},
 	//METHOD POST
 	post( extend = '', body, callback ) {
 		axios.post(`${baseURL}/${extend}`, body, { headers: createHeaders() })
-		  .then(res => {
-		  	if (res.data.code === 200) callback(res.data, true)
-		  })
-		  .catch(err => {
-		  	if (err.response) {
-			  callback(err.response.data.response, false)
-		    }
-		  })
+			.then(res => {
+				if (res.data.code === 200) callback(res.data, true)
+			})
+			.catch(err => {
+				if (err.response) callback(err.response.data.response, false)
+			})
 	},
 	
 	//METHOD PUT

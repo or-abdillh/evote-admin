@@ -98,7 +98,7 @@ const upload = event => {
       >
     </label>
     <div v-if="file">
-      <span class="inline-flex px-4 py-2 justify-center bg-gray-100 border-gray-200 border rounded-r">{{ file.name }}</span>
+      <span class="inline-flex px-4 py-2 justify-center bg-gray-100 border-gray-200 border rounded-r dark:text-gray-700">{{ file.name }}</span>
     </div>
   </div>
 </template>

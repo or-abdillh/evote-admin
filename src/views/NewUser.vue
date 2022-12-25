@@ -3,44 +3,84 @@ import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { mdiAccountGroup, mdiContentSaveMoveOutline, mdiInformation } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
+import ModalBox from '@/components/ModalBox.vue'
 import Notification from '@/components/Notification.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
-import TitleSubBar from '@/components/TitleSubBar.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
-import http from '@/helper/http.js'
+import FilePickerVue from '@/components/FilePicker.vue'
+import ajax from '@/helper/ajax'
 
 const titleStack = ref(['Admin', 'Tambah Pemilih'])
-const store = useStore()
+const isModalActive = ref(false)
 
-const jobs = [{ id: 1, label: 'Dosen' }, { id: 2, label: 'Mahasiswa' }]
 const genders = ['male', 'female']
+
 //Form handler
 const form = reactive({
 	fullname: '',
 	username: '',
 	password: '',
-	job_id: '',
+	job: '',
 	gender: ''
 })
 
-const submit = () => {
-   http.post('admin/accounts', form, (data, status) => {
-      if (status) {
-         showNotif.value = true
-         textNotif.value = data.response
-         colorNotif.value = 'info'
-      }
-      else { 
-         textNotif.value = data.sqlMessage
-         showNotif.value = true
-         colorNotif.value = 'warning'
-      }
-   })
+const submit = async () => {
+  try {
+    const res = await ajax.post('/admin/user', form)
+    showNotif.value = true
+    textNotif.value = res?.data?.results
+    colorNotif.value = 'info'
+  } catch(err) {
+    if (err?.response) {
+      textNotif.value = err.response?.data
+      showNotif.value = true
+      colorNotif.value = 'warning'
+    }
+  }
+}
+
+const emits = defineEmits(['upload:file'])
+
+// Excel uploader
+let excel = ref(null)
+
+const exportExcel = file => excel.value = file
+
+const uploadPercent = ref(0)
+
+const progressEvent = progressEvent => {
+  uploadPercent.value = Math.round(
+    (progressEvent.loaded * 100) / progressEvent.total
+  )
+}
+
+const uploadExcel = async () => {
+  isModalActive.value = true
+  // upload to server
+  const formData = new FormData()
+
+  formData.append('excel', excel.value)
+
+  try {
+    await ajax.post('/admin/user/excel', formData, { 
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progressEvent
+    })
+    showNotif.value = true
+    textNotif.value = 'Success export data from excel'
+    colorNotif.value = 'info'
+  } catch(err) {
+    if (err?.response) {
+      textNotif.value = err.response?.data?.results?.name
+      showNotif.value = true
+      colorNotif.value = 'warning'
+    }
+  }
 }
 
 //Notification handler
@@ -54,6 +94,23 @@ const colorNotif = ref()
   <title-bar :title-stack="titleStack" />
   <hero-bar>Tambah Pemilih Baru pada DPT</hero-bar>
   <main-section>
+    <!-- export excel -->
+    <section class="mb-6">
+      <Field class="mb-0 flex gap-1">
+        <FilePickerVue class="mb-0"
+          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          @update:modelValue="exportExcel"
+          label="Export from excel"></FilePickerVue>
+          <JbButtons type="justify-start lg:justify-start">
+              <JbButton 
+                @click="uploadExcel"
+                :icon="mdiContentSaveMoveOutline"
+                class="mb-0"
+                color="success" />
+          </JbButtons>
+      </Field>
+    </section>
+
    <Notification 
       v-on:close="showNotif = false"
       v-if="showNotif"
@@ -86,10 +143,10 @@ const colorNotif = ref()
        </Field>
 
        <Field label="Job">
-         <Control
-           v-model="form.job_id"
-           :options="jobs"
-           class="mb-6" />
+        <Control 
+           v-model="form.job"
+           class="mb-6"
+           placeholder="Pekerjaan pemilih" />
        </Field>
        
        <Field label="Gender">
