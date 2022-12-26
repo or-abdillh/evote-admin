@@ -16,7 +16,11 @@ const titleStack = ref(['Admin', 'Pasangan Calon'])
 const candidates = ref([])
 const getCandidates = async () => {
    try {
-      const res = await ajax.get('/admin/candidate')
+      const res = await ajax.get('/admin/candidate', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       candidates.value = res.data.results
       // console.log(candidates.value)
    } catch(err) {

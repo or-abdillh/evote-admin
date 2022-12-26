@@ -31,7 +31,11 @@ const form = reactive({
 
 const submit = async () => {
   try {
-    const res = await ajax.post('/admin/user', form)
+    const res = await ajax.post('/admin/user', form, {
+      headers: {
+          token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+        }
+    })
     showNotif.value = true
     textNotif.value = res?.data?.results
     colorNotif.value = 'info'
@@ -68,7 +72,10 @@ const uploadExcel = async () => {
 
   try {
     await ajax.post('/admin/user/excel', formData, { 
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+        token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE',
+      },
       onUploadProgress: progressEvent
     })
     showNotif.value = true

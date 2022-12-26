@@ -22,7 +22,11 @@ const isModalActive = ref(false)
 
 const getAccounts = async () => {
    try {
-      const res = await ajax.get('/admin/user')
+      const res = await ajax.get('/admin/user', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       users.value = res?.data?.results
    } catch(err) {
       if (err?.response) {
@@ -36,7 +40,11 @@ const getAccounts = async () => {
 
 const deleteAllUser = async () => {
    try {
-      await ajax.delete('/admin/user')
+      await ajax.delete('/admin/user', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       deleteSuccess()
    } catch(err) {
       if (err?.response) {
@@ -50,7 +58,11 @@ const deleteAllUser = async () => {
 
 const importToExcel = async () => {
    try {
-      const res = await ajax.get('/admin/user/excel')
+      const res = await ajax.get('/admin/user/excel', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       console.log(res)
    } catch(err) {
       if (err?.response) {

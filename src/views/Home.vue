@@ -59,7 +59,11 @@ const fillLastUpdated = () => lastUpdated.value = `Update terakhir pada ${new Da
 
 const getDashboard = async () => {
    try {
-      let res = await ajax.get('admin/dashboard')
+      let res = await ajax.get('admin/dashboard', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       res = res?.data?.results
       //createTrend
       trends.participations = createTrend(dashboard.participations, res.participants)
@@ -76,7 +80,11 @@ const quickCount = ref([])
 
 const fillQuickCount = async () => {
    try {
-      const res = await ajax.get('/admin/quick-count')
+      const res = await ajax.get('/admin/quick-count', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       quickCount.value = res?.data?.results
    } catch(err) { console.log(err) }
 }
@@ -104,7 +112,11 @@ const chooseState = (start, finish) => {
 //API
 const getEvent = async () => {
    try {
-      let res = await ajax.get('/admin/event')
+      let res = await ajax.get('/admin/event', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       res = res?.data?.results
 
       start.value = new Date(res.start).getTime()
@@ -196,7 +208,7 @@ channel.bind('user-has-voted', data => {
         trend-type="up"
         color="text-blue-500"
         :icon="mdiChartTimelineVariant"
-        :number="dashboard.participations"
+        :text="dashboard.participations"
         suffix="%"
         label="Partisipasi pemilih"
       />

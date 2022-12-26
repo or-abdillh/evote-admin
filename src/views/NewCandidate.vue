@@ -51,7 +51,8 @@ const submit = async () => {
     
     const res = await ajax.post('/admin/candidate/', formData, {
       headers: {
-        "Content-Type": "multipart/form-data"
+        "Content-Type": "multipart/form-data",
+        token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
       }
     })
     // status.true

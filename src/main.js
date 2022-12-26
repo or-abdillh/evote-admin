@@ -29,7 +29,11 @@ router.beforeEach( async (to, from) => {
   store.dispatch('asideMobileToggle', false)
   store.dispatch('asideLgToggle', false)
   try {
-    const res = await ajax.get('/admin/auth')
+    const res = await ajax.get('/admin/auth', {
+      headers: {
+          token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+      }
+    })
   } catch(err) {
     if (err?.response && to.name !== 'login') {
       console.log( err?.response?.data?.results?.message )
@@ -37,22 +41,6 @@ router.beforeEach( async (to, from) => {
     }
     else if (err?.request) console.log( err?.request?.data )
   }
-  // try {
-  //   const res = await ajax.get('/admin/auth')
-  //   console.log(res?.data)
-  //   // User has authenticated
-	// 	if ( res?.data?.status ) {
-  //     if ( to.name === 'login' ) 
-  //     else next()
-  //   }
-  // } catch(err) {
-  //   if (err?.response) {
-  //     if ( to.name !== 'login' ) {
-  //       router.push({ name: 'login' })
-  //       next()
-  //     }
-  //   }
-  // }
 })
 
 router.afterEach(to => {

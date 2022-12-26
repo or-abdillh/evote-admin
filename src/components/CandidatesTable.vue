@@ -116,7 +116,8 @@ const update = async () => {
     
     const res = await ajax.put(`/admin/candidate/${ candidate_id.value }`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data"
+        "Content-Type": "multipart/form-data",
+        token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
       }
     })
     // status.true
@@ -144,7 +145,11 @@ const btnDelete = data => {
 
 const deleteCandidate = async () => {
   try {
-    const res = await ajax.delete(`/admin/candidate/${ candidate_id.value }`)
+    const res = await ajax.delete(`/admin/candidate/${ candidate_id.value }`, {
+      headers: {
+          token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+      }
+    })
     if (res?.data?.status) emit('delete-success') 
   } catch(err) {
     if (err?.response) {

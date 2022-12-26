@@ -100,7 +100,11 @@ const btnUpdate = data => {
 const update = async () => {
    //Post data to API
   try {
-    await ajax.put(`/admin/user/${ updateForm.id }`, updateForm)
+    await ajax.put(`/admin/user/${ updateForm.id }`, updateForm, {
+      headers: {
+          token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+      }
+    })
     emits('update-success')
   } catch(err) {
     store.state.errorFromServer = err
@@ -119,7 +123,11 @@ const btnDelete = data => {
 
 const deleteAccount = async () => {
   try {
-    await ajax.delete(`/admin/user/${ id.value }`)
+    await ajax.delete(`/admin/user/${ id.value }`, {
+      headers: {
+          token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+      }
+    })
     emits('delete-success')
   } catch(err) {
     store.state.errorFromServer = err

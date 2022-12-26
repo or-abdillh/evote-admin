@@ -31,7 +31,11 @@ const passcode = ref('passcode')
 
 const getEvent = async () => {
    try {
-      let res = await ajax.get('/admin/event')
+      let res = await ajax.get('/admin/event', {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       res = res?.data?.results
       eventStartAt.value = new Date(res.start).toLocaleString('id')
       eventFinishAt.value = new Date(res.end).toLocaleString('id')
@@ -52,7 +56,11 @@ const textNotif = ref('')
 //Update
 const btnUpdate = async () => {
    try {
-      const res = await ajax.put('/admin/event', form)
+      const res = await ajax.put('/admin/event', form, {
+         headers: {
+            token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+         }
+      })
       if (res?.data?.status) {
          textNotif.value = 'Action success'
          getEvent()

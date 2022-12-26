@@ -31,7 +31,11 @@ const submit = async () => {
   //   } else isLoginFail.value = true
   // })
   try {
-    const res = await ajax.post('/login', form)
+    const res = await ajax.post('/login', form, {
+      headers: {
+          token: localStorage.getItem('evote-himati:token') || 'YOUR_TOKEN_HERE'
+        }
+    })
     // Just role master can access
     if ( res?.data?.results?.role === 'master' ) {
       // Save token from response to local
