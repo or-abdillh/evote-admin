@@ -231,7 +231,7 @@ const deleteAccount = async () => {
           {{ item.job }}
         </td>
         <td data-label="Status vote">
-          {{ item.status_vote > 0 ? 'sudah vote' : 'belum vote'}}
+          {{ item.status > 0 ? 'sudah vote' : 'belum vote'}}
         </td>
         <td data-label="Timestamp Vote">
           <small
